@@ -1,4 +1,2 @@
 // TODO: add stuff here
-var foo = function() {
-  
-}
+console.log("XXX hi");
