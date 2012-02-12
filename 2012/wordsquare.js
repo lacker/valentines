@@ -74,10 +74,35 @@ function getTile(x, y) {
 }
 
 function unselectAll() {
+  var word = "";
   _.each(SELECTED, function(tile) {
-    tile.unselect();
+    word += tile.letter;
+  });
+  var success = DICT[word];
+  _.each(SELECTED, function(tile) {
+    if (success) {
+      tile.destroy();
+    } else {
+      tile.unselect();
+    }
   });
   SELECTED = [];
+  if (success) {
+    console.log("made: " + word);
+    dropAll();
+  }
+}
+
+// Logically drops all the existing tiles.
+function dropAll() {
+  for (var x = 0; x < LEN; ++x) {
+    for (var y = LEN - 1; y >= 0; ++y) {
+      var tile = getTile(x, y);
+      if (!tile || !tile.drop()) {
+        break;
+      }
+    }
+  }
 }
 
 // Logical location:
@@ -210,17 +235,18 @@ Tile.prototype = {
   // Returns whether this could drop.
   drop: function() {
     // First, figure out how high of a y we can drop this tile to.
-    for (var newY = LEN - 1; newY > y; --newY) {
-      if (getTile(x, newY) == null) {
+    for (var newY = LEN - 1; newY > this.y; --newY) {
+      if (getTile(this.x, newY) == null) {
         break;
       }
     }
-    if (newY == y) {
+    if (newY == this.y) {
       // We can't drop this tile at all.
       return false;
     }
-    this.move(x, newY);
-    this.lift += CELL_SIZE * (newY - y);
+    console.log("dropping " + this.letter + " by " + (newY - this.y));
+    this.move(this.x, newY);
+    this.lift += CELL_SIZE * (newY - this.y);
     return true;
   },
   
