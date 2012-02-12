@@ -96,10 +96,10 @@ function unselectAll() {
 // Logically drops all the existing tiles.
 function dropAll() {
   for (var x = 0; x < LEN; ++x) {
-    for (var y = LEN - 1; y >= 0; ++y) {
+    for (var y = LEN - 1; y >= 0; --y) {
       var tile = getTile(x, y);
-      if (!tile || !tile.drop()) {
-        break;
+      if (tile) {
+        tile.drop();
       }
     }
   }
@@ -186,8 +186,6 @@ Tile.prototype = {
   },
   
   show: function() {
-    // console.log("showing at " + this.x + "," + this.y);
-
     // Make the whole cell pad-color
     var c = context();
     c.fillStyle = PAD_COLOR;
@@ -210,8 +208,6 @@ Tile.prototype = {
   },
 
   hide: function() {
-    // console.log("hiding at " + this.x + "," + this.y);
-
     // Make it all background
     var c = context();
     c.fillStyle = BACKGROUND;
@@ -244,7 +240,7 @@ Tile.prototype = {
       // We can't drop this tile at all.
       return false;
     }
-    console.log("dropping " + this.letter + " by " + (newY - this.y));
+
     this.move(this.x, newY);
     this.lift += CELL_SIZE * (newY - this.y);
     return true;
