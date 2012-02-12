@@ -161,17 +161,17 @@ Tile.prototype = {
   // Returns whether this could drop.
   drop: function() {
     // First, figure out how high of a y we can drop this tile to.
-    for (var new_y = LEN - 1; new_y > y; --new_y) {
-      if (getTile(x, new_y) == null) {
+    for (var newY = LEN - 1; newY > y; --newY) {
+      if (getTile(x, newY) == null) {
         break;
       }
     }
-    if (new_y == y) {
+    if (newY == y) {
       // We can't drop this tile at all.
       return false;
     }
-    this.move(x, new_y);
-    this.lift += CELL_SIZE * (new_y - y);
+    this.move(x, newY);
+    this.lift += CELL_SIZE * (newY - y);
     return true;
   },
   
@@ -182,16 +182,46 @@ Tile.prototype = {
   }
 };
 
-var tiles = [];
+
+var Position = function(event) {
+  var canvas = $("canvas")[0];
+  this.pixelX = event.pageX - canvas.offsetLeft;
+  this.pixelY = event.pageY - canvas.offsetTop;
+};
+
+Position.prototype = {
+  toString: function() {
+    return "" + this.pixelX + " : " + this.pixelY;
+  }
+};
+
+function down(e) {
+  var pos = new Position(e);
+  console.log("down: " + pos);
+}
+
+function move(e) {
+  var pos = new Position(e);
+  console.log("move: " + pos);
+}
+
+function up(e) {
+  var pos = new Position(e);
+  console.log("up: " + pos);
+}
+
+
 
 // Do stuff
 function main() {
+  $("canvas").mousedown(down);
+  $("canvas").mousemove(move);
+  $("canvas").mouseup(up);
+  
   clear();
   for (var x = 0; x < LEN; ++x) {
-    tiles[x] = [];
     for (var y = 0; y < LEN; ++y) {
       var tile = new Tile(x, y, randomLetter());
-      tiles[x][y] = tile;
       tile.show();
     }
   }
