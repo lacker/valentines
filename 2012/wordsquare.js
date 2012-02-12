@@ -13,6 +13,10 @@ var DEFAULT_COLOR = "white";
 // Number of cells to a row/column
 var LEN = 6;
 
+// Animation
+var SCALE_PER_FRAME = 0.025;
+var FPS = 40;
+
 var CELL_SIZE = (CANVAS_SIZE - 2 * PADDING) / LEN;
 
 var BACKGROUND = "#FFCCCC";
@@ -100,9 +104,22 @@ function unselectAll() {
   }
 }
 
-// Logical location:
+function tick() {
+  for (var x = 0; x < LEN; ++x) {
+    for (var y = 0; y < LEN; ++y) {
+      var tile = getTile(x, y);
+      if (tile.scale >= 1) {
+        continue;
+      }
+      tile.scale = Math.min(1, tile.scale + SCALE_PER_FRAME);
+      tile.show();
+    }
+  }
+}
+
 // x is 0..5, goes from left to right.
 // y is 0..5, goes from top to bottom.
+// scale is 0..1, used for animation.
 //
 // Tiles manage themselves for TILES but not for SELECTED.
 var Tile = function(x, y, letter) {
@@ -112,6 +129,7 @@ var Tile = function(x, y, letter) {
 
   this.x = x;
   this.y = y;
+  this.scale = 0;
   this.letter = letter;
   this.selected = false;
 
@@ -150,19 +168,22 @@ Tile.prototype = {
     this.show();
   },
   
-  corners: function() {
-    return [PADDING + CELL_SIZE * this.x,
-            PADDING + CELL_SIZE * this.y,
-            CELL_SIZE,
-            CELL_SIZE];
+  corners: function(scale) {
+    if (scale == null) {
+      scale = 1;
+    }
+    var shrink = (1 - scale) * 0.5 * CELL_SIZE;
+    return [PADDING + CELL_SIZE * this.x + shrink,
+            PADDING + CELL_SIZE * this.y + shrink,
+            CELL_SIZE - 2 * shrink,
+            CELL_SIZE - 2 * shrink];
   },
 
-  padded: function() {
-    var corners = this.corners();
-    return [corners[0] + PADDING,
-            corners[1] + PADDING,
-            corners[2] - 2 * PADDING,
-            corners[3] - 2 * PADDING];
+  pad: function(rect) {
+    return [rect[0] + PADDING,
+            rect[1] + PADDING,
+            rect[2] - 2 * PADDING,
+            rect[3] - 2 * PADDING];
   },
 
   middleX: function() {
@@ -176,10 +197,11 @@ Tile.prototype = {
   },
   
   show: function() {
-    // Make the whole cell pad-color
+    // Make a square of pad-color
+    var square = this.corners(this.scale);
     var c = context();
     c.fillStyle = PAD_COLOR;
-    c.fillRect.apply(c, this.corners());
+    c.fillRect.apply(c, square);
 
     // Color the middle part
     if (this.selected) {
@@ -187,14 +209,17 @@ Tile.prototype = {
     } else {
       c.fillStyle = DEFAULT_COLOR;
     }
-    c.fillRect.apply(c, this.padded());
+    c.fillRect.apply(c, this.pad(square));
 
     // Color the text
-    c.font = "80px Helvetica";
-    c.fillStyle = "black";
-    c.textAlign = "center";
-    c.textBaseline = "middle";
-    c.fillText(this.letter, this.middleX(), this.middleY());
+    var fontSize = Math.floor(80 * this.scale);
+    if (fontSize >= 10) {
+      c.font = "" + fontSize + "px Helvetica";
+      c.fillStyle = "black";
+      c.textAlign = "center";
+      c.textBaseline = "middle";
+      c.fillText(this.letter, this.middleX(), this.middleY());
+    }
   },
 
   hide: function() {
@@ -306,7 +331,8 @@ function main() {
   $("canvas").mousedown(down);
   $("canvas").mousemove(move);
   $("canvas").mouseup(up);
-  
+
+  // TODO: break out resetBoard into a function
   clear();
   for (var x = 0; x < LEN; ++x) {
     for (var y = 0; y < LEN; ++y) {
@@ -314,5 +340,7 @@ function main() {
       tile.show();
     }
   }
+
+  setInterval(tick, 1000 / FPS);
 }
 $(main);
