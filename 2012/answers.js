@@ -1,6 +1,6 @@
 // Don't read this, you cheater!
 var ANSWERS = [
-  "Anna, you rule.",
+  "Annamay, you rule.",
   "You are totally great in every way.",
 ];
 

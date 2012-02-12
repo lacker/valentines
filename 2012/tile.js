@@ -17,6 +17,9 @@ function unselectAll() {
     word += tile.letter;
   });
   var success = DICT[word];
+  if (word == GAME.answer.nextWord) {
+    success = true;
+  }
   _.each(SELECTED, function(tile) {
     if (success) {
       tile.destroy();

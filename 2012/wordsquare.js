@@ -126,12 +126,17 @@ function randomPath(length) {
   }
 }
 
-// This is kind of a weird function.
-// It picks a location for the target word to appear on
+// This picks a location for the target word to appear on
 // the board, so that we can ensure that eventually it will appear.
+// It is based on GAME.answer.nextWord and fills GAME.target.
 function populateTarget() {
   var letters = GAME.answer.nextWord.split("");
-  // XXX
+  var path = randomPath(letters.length);
+  GAME.target = {};
+  for (var i = 0; i < path.length; ++i) {
+    var key = path[i][0] + "," + path[i][1];
+    GAME.target[key] = letters[i];
+  }
 }
 
 function error(message) {
@@ -147,6 +152,16 @@ function randomLetter() {
     return choice(EASY_LETTERS);
   }
   return choice(ALPHABET);
+}
+
+function letterAt(x, y) {
+  var key = "" + x + "," + y;
+  var letter = GAME.target[key];
+  if (letter == null) {
+    return randomLetter();
+  } else {
+    return letter;
+  }
 }
 
 function context() {
@@ -169,17 +184,16 @@ function clear() {
 function resetBoard(level) {
   GAME.level = level;
   GAME.answer = new Answer(level);
-
+  populateTarget();
+  
   eachTile(function(tile) {
     tile.destroy();
   });
   clear();
 
-  populateTarget();
-  
   for (var x = 0; x < LEN; ++x) {
     for (var y = 0; y < LEN; ++y) {
-      var tile = new Tile(x, y, randomLetter());
+      var tile = new Tile(x, y, letterAt(x, y));
       tile.show();
     }
   }
