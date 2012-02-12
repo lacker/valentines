@@ -38,11 +38,10 @@ var BEST_LETTERS = ["A", "E", "I", "N", "O", "S", "T"];
 // Tiles that have been selected
 var SELECTED = [];
 
-// TODO: match with url hashtag
-var GAME = {
-  level: 1,
-  targetWord: null,
-};
+// Game contains:
+// level - which level you're on
+// targetWord - the next answer-word to get, kept in TARGET
+var GAME = {};
 
 // A map from x,y to what letter we are targeting.
 var TARGET = {};
@@ -257,83 +256,6 @@ Tile.prototype = {
 };
 
 
-var Position = function(event) {
-  var canvas = $("canvas")[0];
-  this.pixelX = event.pageX - canvas.offsetLeft;
-  this.pixelY = event.pageY - canvas.offsetTop;
-
-  // The location in grid units instead of pixels
-  this.floatX = (this.pixelX - PADDING) / CELL_SIZE;
-  this.floatY = (this.pixelY - PADDING) / CELL_SIZE;
-
-  // The actual grid unit this maps to
-  this.x = Math.floor(this.floatX);
-  this.y = Math.floor(this.floatY);
-
-  // Figure out whether this should trigger something.
-  // We only trigger for cell clicks
-  if (this.x < 0 || this.x >= LEN ||
-      this.y < 0 || this.y >= LEN) {
-    return;
-  }
-
-  // We don't trigger if you're within the buffer from the edge.
-  var buffer = 0.3;
-  var xDiff = this.floatX - this.x;
-  var yDiff = this.floatY - this.y;
-  if (xDiff < buffer || xDiff > 1 - buffer ||
-      yDiff < buffer || yDiff > 1 - buffer) {
-    return;
-  }
-
-  // We only trigger if there's a tile
-  if (this.tile() == null) {
-    return;
-  }
-  
-  this.trigger = true;
-};
-
-Position.prototype = {
-  trigger: false,
-  
-  toString: function() {
-    return "" + this.pixelX + " : " + this.pixelY;
-  },
-
-  tile: function() {
-    return getTile(this.x, this.y);
-  },
-};
-
-var MOUSE = {
-  down: false,
-};
-
-function down(e) {
-  MOUSE.down = true;
-  var pos = new Position(e);
-  if (pos.trigger) {
-    pos.tile().select();
-  }
-}
-
-function move(e) {
-  if (!MOUSE.down) {
-    return;
-  }
-  var pos = new Position(e);
-  if (pos.trigger) {
-    pos.tile().select();
-  }
-}
-
-function up(e) {
-  MOUSE.down = false;
-  unselectAll();
-}
-
-
 
 // Do stuff
 function main() {
@@ -342,6 +264,7 @@ function main() {
   $("canvas").mouseup(up);
 
   // TODO: break out resetBoard into a function
+  // resetBoard(1);
   clear();
   for (var x = 0; x < LEN; ++x) {
     for (var y = 0; y < LEN; ++y) {
