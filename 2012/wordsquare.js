@@ -38,6 +38,15 @@ var BEST_LETTERS = ["A", "E", "I", "N", "O", "S", "T"];
 // Tiles that have been selected
 var SELECTED = [];
 
+// TODO: match with url hashtag
+var GAME = {
+  level: 1,
+  targetWord: null,
+};
+
+// A map from x,y to what letter we are targeting.
+var TARGET = {};
+
 function error(message) {
   alert(message);
   throw new Error(message);
