@@ -41,19 +41,102 @@ var SELECTED = [];
 // Game contains:
 // answer - the Answer object for the game
 // level - which level you're on
+// target - a map from x,y to what letter we are targeting there
 var GAME = {};
 
-// A map from x,y to what letter we are targeting.
-// Constructs the word in GAME.answer.nextWord
-var TARGET = {};
+function rand(n) {
+  return Math.floor(Math.random() * n);
+}
+
+function randomCell() {
+  return [rand(LEN), rand(LEN)];
+}
+
+function choice(array) {
+  return array[rand(array.length)];
+}
+
+function shuffle(array) {
+  return _.sortBy(array, Math.random);
+}
+
+function neighbors(cell) {
+  var possible = [
+    [cell[0], cell[1] + 1],
+    [cell[0], cell[1] - 1],
+    [cell[0] + 1, cell[1]],
+    [cell[0] - 1, cell[1]],
+    [cell[0] + 1, cell[1] - 1],
+    [cell[0] + 1, cell[1] + 1],
+    [cell[0] - 1, cell[1] - 1],
+    [cell[0] - 1, cell[1] + 1],
+  ];
+  console.log("possible: " + possible);
+  return _.filter(possible, function(cell) {
+    return (cell[0] >= 0 && cell[0] < LEN &&
+            cell[1] >= 0 && cell[1] < LEN);
+  });
+}
+
+// Picks a random path through the grid of a given length.
+// Returns a list of cells specified as "x,y" strings, or
+// returns null if it can't find it greedily.
+function greedyPath(length) {
+  var head = randomCell();
+  var output = [head];
+  var used = {};
+  var headKey = head[0] + "," + head[1];
+  console.log("starting at: " + headKey);
+  used[headKey] = 1;
+  
+  while (output.length < length) {
+    var possible = shuffle(neighbors(head));
+    var foundNewHead = false;
+    for (var i = 0; i < possible.length; ++i) {
+      var newHead = possible[i];
+      var newHeadKey = newHead[0] + "," + newHead[1];
+      if (used[newHeadKey]) {
+        console.log("already used: " + newHeadKey);
+        continue;
+      }
+
+      // This is the new head
+      console.log("using: " + newHeadKey);
+      output.push(newHead);
+      used[newHeadKey] = 1;
+      head = newHead;
+      foundNewHead = true;
+      break;
+    }
+    if (!foundNewHead) {
+      return null;
+    }
+  }
+  
+  return output;
+}
+
+// Retries greedyPath til it works
+function randomPath(length) {
+  while (true) {
+    var answer = greedyPath(length);
+    if (answer) {
+      return answer;
+    }
+  }
+}
+
+// This is kind of a weird function.
+// It picks a location for the target word to appear on
+// the board, so that we can ensure that eventually it will appear.
+function populateTarget() {
+  var letters = GAME.answer.nextWord.split("");
+  // XXX
+}
 
 function error(message) {
   alert(message);
   throw new Error(message);
-}
-
-function choice(array) {
-  return array[Math.floor(Math.random() * array.length)];
 }
 
 function randomLetter() {
@@ -91,6 +174,8 @@ function resetBoard(level) {
     tile.destroy();
   });
   clear();
+
+  populateTarget();
   
   for (var x = 0; x < LEN; ++x) {
     for (var y = 0; y < LEN; ++y) {
