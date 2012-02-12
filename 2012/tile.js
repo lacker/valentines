@@ -24,7 +24,7 @@ function unselectAll() {
     success = true;
     GAME.answer.next();
     
-    // XXX trigger a real view update for answer fragment
+    setMessage(GAME.answer.fragment);
     console.log(GAME.answer.fragment);
 
     if (GAME.answer.done()) {

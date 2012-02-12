@@ -141,6 +141,11 @@ function populateTarget() {
   }
 }
 
+// Just a hook into the global view.
+function setMessage(message) {
+  $("#top").text(message);
+}
+
 // Turns on a hint somewhere.
 // If there's already a hint, this is a no-op.
 function hint() {
@@ -163,7 +168,10 @@ function hint() {
     hintable.hinted = true;
     hintable.show();
   } else {
-    // XXX add a hint to the global message
+    var extender = _.map(GAME.answer.nextWord.split(""), function() {
+      return " _";
+    });
+    setMessage(GAME.answer.fragment + extender.join(""));
   }
 }
 
