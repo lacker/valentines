@@ -19,11 +19,21 @@ function unselectAll() {
   var success = DICT[word];
   if (word == GAME.answer.nextWord) {
     success = true;
+    GAME.answer.next();
+    
+    // XXX trigger a real view update for answer fragment
+    console.log(GAME.answer.fragment);
+
+    if (GAME.answer.done()) {
+      resetBoard(GAME.level + 1);
+    } else {
+      populateTarget();
+    }
   }
   _.each(SELECTED, function(tile) {
     if (success) {
       tile.destroy();
-      var newTile = new Tile(tile.x, tile.y, randomLetter());
+      var newTile = new Tile(tile.x, tile.y, letterAt(tile.x, tile.y));
       newTile.show();
     } else {
       tile.unselect();

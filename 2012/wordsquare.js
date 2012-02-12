@@ -71,7 +71,6 @@ function neighbors(cell) {
     [cell[0] - 1, cell[1] - 1],
     [cell[0] - 1, cell[1] + 1],
   ];
-  console.log("possible: " + possible);
   return _.filter(possible, function(cell) {
     return (cell[0] >= 0 && cell[0] < LEN &&
             cell[1] >= 0 && cell[1] < LEN);
@@ -86,7 +85,6 @@ function greedyPath(length) {
   var output = [head];
   var used = {};
   var headKey = head[0] + "," + head[1];
-  console.log("starting at: " + headKey);
   used[headKey] = 1;
   
   while (output.length < length) {
@@ -96,12 +94,10 @@ function greedyPath(length) {
       var newHead = possible[i];
       var newHeadKey = newHead[0] + "," + newHead[1];
       if (used[newHeadKey]) {
-        console.log("already used: " + newHeadKey);
         continue;
       }
 
       // This is the new head
-      console.log("using: " + newHeadKey);
       output.push(newHead);
       used[newHeadKey] = 1;
       head = newHead;
