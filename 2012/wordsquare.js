@@ -88,6 +88,8 @@ function unselectAll() {
   _.each(SELECTED, function(tile) {
     if (success) {
       tile.destroy();
+      var newTile = new Tile(tile.x, tile.y, randomLetter());
+      newTile.show();
     } else {
       tile.unselect();
     }
