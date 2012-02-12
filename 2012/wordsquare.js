@@ -5,6 +5,9 @@ var CANVAS_SIZE = 720;
 // How frustrated you can get before you get a hint
 var HINT_THRESHOLD = 4;
 
+// How frustrated you can get before you get a really good hint
+var PERMAHINT_THRESHOLD = 10;
+
 // Extra padding on each side of the canvas
 var PADDING = 3;
 var PAD_COLOR = "black";
@@ -46,7 +49,9 @@ var SELECTED = [];
 // answer - the Answer object for the game
 // level - which level you're on
 // target - a map from x,y to what letter we are targeting there
+// firstTarget - an "x,y" string for the first letter
 // frustration - number of turns with no hint or special-word-guessing
+// permahint - whether we are in permahint mode
 var GAME = {};
 
 function rand(n) {
@@ -134,10 +139,14 @@ function populateTarget() {
   var letters = GAME.answer.nextWord.split("");
   var path = randomPath(letters.length);
   GAME.frustration = 0;
+  GAME.permahint = false;
   GAME.target = {};
   for (var i = 0; i < path.length; ++i) {
     var key = path[i][0] + "," + path[i][1];
     GAME.target[key] = letters[i];
+    if (i == 0) {
+      GAME.firstTarget = key;
+    }
   }
 }
 
@@ -173,6 +182,14 @@ function hint() {
     });
     setMessage(GAME.answer.fragment + extender.join(""));
   }
+}
+
+// Turns on the permahint.
+function permahint() {
+  console.log("permahinting");
+  GAME.permahint = true;
+  var tile = TILES[GAME.firstTarget];
+  tile.show();
 }
 
 function error(message) {
@@ -220,6 +237,7 @@ function clear() {
 function resetBoard(level) {
   GAME.level = level;
   GAME.answer = new Answer(level);
+  GAME.permahint = null;
   populateTarget();
   
   eachTile(function(tile) {

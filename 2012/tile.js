@@ -55,6 +55,9 @@ function unselectAll() {
     if (GAME.frustration == HINT_THRESHOLD) {
       hint();
     }
+    if (GAME.frustration == PERMAHINT_THRESHOLD) {
+      permahint();
+    }
   }
 
 }
@@ -164,6 +167,13 @@ Tile.prototype = {
     var corners = this.corners();
     return corners[1] + corners[3] / 2;
   },
+
+  useHintColor: function() {
+    if (this.hinted) {
+      return true;
+    }
+    return (GAME.permahint && this.key() == GAME.firstTarget);
+  },
   
   show: function() {
     // Make a square of pad-color
@@ -175,7 +185,7 @@ Tile.prototype = {
     // Color the middle part
     if (this.selected) {
       c.fillStyle = SELECTED_COLOR;
-    } else if (this.hinted) {
+    } else if (this.useHintColor()) {
       c.fillStyle = HINTED_COLOR;
     } else {
       c.fillStyle = DEFAULT_COLOR;
