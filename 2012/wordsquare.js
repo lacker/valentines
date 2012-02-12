@@ -6,6 +6,10 @@ var CANVAS_SIZE = 720;
 var PADDING = 3;
 var PAD_COLOR = "black";
 
+// Cell colors
+var SELECTED_COLOR = "blue";
+var DEFAULT_COLOR = "white";
+
 // Number of cells to a row/column
 var LEN = 6;
 
@@ -26,6 +30,9 @@ var EASY_LETTERS = ["A", "B", "D", "E", "F", "G",
                     "R", "S", "T", "U"];
 
 var BEST_LETTERS = ["A", "E", "I", "N", "O", "S", "T"];
+
+// Tiles that have been selected
+var SELECTED = [];
 
 function error(message) {
   alert(message);
@@ -66,6 +73,13 @@ function getTile(x, y) {
   return TILES[tileKey(x, y)];
 }
 
+function unselectAll() {
+  _.each(SELECTED, function(tile) {
+    tile.unselect();
+  });
+  SELECTED = [];
+}
+
 // Logical location:
 // x is 0..5, goes from left to right.
 // y is 0..5, goes from top to bottom.
@@ -73,7 +87,9 @@ function getTile(x, y) {
 // A tile might actually be somewhere other than its logical location.
 // lift is how far the tile has to fall to get to its logical location.
 // lift is in pixels.
-var Tile = function(x, y, letter, color) {
+//
+// Tiles manage themselves for TILES but not for SELECTED.
+var Tile = function(x, y, letter) {
   if (getTile(x, y)) {
     error("there is already a tile at " + x + "," + y);
   }
@@ -82,7 +98,7 @@ var Tile = function(x, y, letter, color) {
   this.y = y;
   this.lift = 0;
   this.letter = letter;
-  this.color = (color || "white");
+  this.selected = false;
 
   TILES[this.key()] = this;
 };
@@ -90,6 +106,33 @@ var Tile = function(x, y, letter, color) {
 Tile.prototype = {
   key: function() {
     return tileKey(this.x, this.y);
+  },
+
+  // If it's already selected, this is a no-op.
+  // If it's too far from the last selection, this is a no-op.
+  // Adds to SELECTED.
+  select: function() {
+    if (this.selected) {
+      return;
+    }
+    if (SELECTED.length > 0) {
+      var lastTile = SELECTED[SELECTED.length - 1];
+      var deltaX = this.x - lastTile.x;
+      var deltaY = this.y - lastTile.y;
+      if (Math.abs(deltaX) > 1 ||
+          Math.abs(deltaY) > 1) {
+        return;
+      }
+    }
+    SELECTED.push(this);
+    this.selected = true;
+    this.show();
+  },
+
+  // Does not remove from SELECTED.
+  unselect: function() {
+    this.selected = false;
+    this.show();
   },
   
   corners: function() {
@@ -126,7 +169,11 @@ Tile.prototype = {
     c.fillRect.apply(c, this.corners());
 
     // Color the middle part
-    c.fillStyle = this.color;
+    if (this.selected) {
+      c.fillStyle = SELECTED_COLOR;
+    } else {
+      c.fillStyle = DEFAULT_COLOR;
+    }
     c.fillRect.apply(c, this.padded());
 
     // Color the text
@@ -151,8 +198,10 @@ Tile.prototype = {
     if (getTile(x, y)) {
       error("cannot move to " + x + "," + y);
     }
+    delete TILES[this.key()];
     this.x = x;
     this.y = y;
+    TILES[this.key()] = this;
   },
 
   // Drops this existing tile as much as possible.
@@ -212,8 +261,12 @@ var Position = function(event) {
     return;
   }
 
+  // We only trigger if there's a tile
+  if (this.tile() == null) {
+    return;
+  }
+  
   this.trigger = true;
-  return;
 };
 
 Position.prototype = {
@@ -221,28 +274,38 @@ Position.prototype = {
   
   toString: function() {
     return "" + this.pixelX + " : " + this.pixelY;
-  }
+  },
+
+  tile: function() {
+    return getTile(this.x, this.y);
+  },
+};
+
+var MOUSE = {
+  down: false,
 };
 
 function down(e) {
+  MOUSE.down = true;
   var pos = new Position(e);
   if (pos.trigger) {
-    console.log("down: " + pos);
+    pos.tile().select();
   }
 }
 
 function move(e) {
+  if (!MOUSE.down) {
+    return;
+  }
   var pos = new Position(e);
   if (pos.trigger) {
-    console.log("move: " + pos);
+    pos.tile().select();
   }
 }
 
 function up(e) {
-  var pos = new Position(e);
-  if (pos.trigger) {
-    console.log("up: " + pos);
-  }
+  MOUSE.down = false;
+  unselectAll();
 }
 
 
