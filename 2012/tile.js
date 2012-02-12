@@ -29,9 +29,18 @@ function unselectAll() {
     } else {
       populateTarget();
     }
+  } else {
+    GAME.frustration += 1;
   }
+
   _.each(SELECTED, function(tile) {
     if (success) {
+      // If this means progress to the target, reset frustration.
+      var targetLetter = GAME.target[tile.key()];
+      if (targetLetter != null && targetLetter != tile.letter) {
+        GAME.frustration = 0;
+      }
+      
       tile.destroy();
       var newTile = new Tile(tile.x, tile.y, letterAt(tile.x, tile.y));
       newTile.show();
@@ -41,7 +50,7 @@ function unselectAll() {
   });
   SELECTED = [];
   if (success) {
-    console.log("made: " + word);
+    console.log("made: " + word + ". frustration = " + GAME.frustration);
   }
 }
 

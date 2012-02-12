@@ -42,6 +42,7 @@ var SELECTED = [];
 // answer - the Answer object for the game
 // level - which level you're on
 // target - a map from x,y to what letter we are targeting there
+// frustration - number of turns with no hint or special-word-guessing
 var GAME = {};
 
 function rand(n) {
@@ -128,6 +129,7 @@ function randomPath(length) {
 function populateTarget() {
   var letters = GAME.answer.nextWord.split("");
   var path = randomPath(letters.length);
+  GAME.frustration = 0;
   GAME.target = {};
   for (var i = 0; i < path.length; ++i) {
     var key = path[i][0] + "," + path[i][1];
