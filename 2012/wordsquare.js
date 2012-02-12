@@ -25,12 +25,14 @@ var EASY_LETTERS = ["A", "B", "D", "E", "F", "G",
                     "I", "L", "M", "N", "O", "P",
                     "R", "S", "T", "U"];
 
+var BEST_LETTERS = ["A", "E", "I", "N", "O", "S", "T"];
+
 function choice(array) {
   return array[Math.floor(Math.random() * array.length)];
 }
 
 function randomLetter() {
-  return choice(choice([ALPHABET, EASY_LETTERS]));
+  return choice(choice([ALPHABET, EASY_LETTERS, BEST_LETTERS]));
 }
 
 function context() {
@@ -102,7 +104,7 @@ Tile.prototype = {
     c.fillRect.apply(c, this.padded());
 
     // Color the text
-    c.font = "64px Helvetica";
+    c.font = "80px Helvetica";
     c.fillStyle = "black";
     c.textAlign = "center";
     c.textBaseline = "middle";
