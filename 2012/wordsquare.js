@@ -7,7 +7,7 @@ var PADDING = 3;
 var PAD_COLOR = "black";
 
 // Cell colors
-var SELECTED_COLOR = "blue";
+var SELECTED_COLOR = "#BBCCFF";
 var DEFAULT_COLOR = "white";
 
 // Number of cells to a row/column
@@ -44,7 +44,13 @@ function choice(array) {
 }
 
 function randomLetter() {
-  return choice(choice([ALPHABET, EASY_LETTERS, BEST_LETTERS]));
+  if (Math.random() < 0.5) {
+    return choice(BEST_LETTERS);
+  }
+  if (Math.random() < 0.5) {
+    return choice(EASY_LETTERS);
+  }
+  return choice(ALPHABET);
 }
 
 function context() {
@@ -89,29 +95,12 @@ function unselectAll() {
   SELECTED = [];
   if (success) {
     console.log("made: " + word);
-    dropAll();
-  }
-}
-
-// Logically drops all the existing tiles.
-function dropAll() {
-  for (var x = 0; x < LEN; ++x) {
-    for (var y = LEN - 1; y >= 0; --y) {
-      var tile = getTile(x, y);
-      if (tile) {
-        tile.drop();
-      }
-    }
   }
 }
 
 // Logical location:
 // x is 0..5, goes from left to right.
 // y is 0..5, goes from top to bottom.
-//
-// A tile might actually be somewhere other than its logical location.
-// lift is how far the tile has to fall to get to its logical location.
-// lift is in pixels.
 //
 // Tiles manage themselves for TILES but not for SELECTED.
 var Tile = function(x, y, letter) {
@@ -121,7 +110,6 @@ var Tile = function(x, y, letter) {
 
   this.x = x;
   this.y = y;
-  this.lift = 0;
   this.letter = letter;
   this.selected = false;
 
@@ -162,7 +150,7 @@ Tile.prototype = {
   
   corners: function() {
     return [PADDING + CELL_SIZE * this.x,
-            PADDING + CELL_SIZE * this.y - this.lift,
+            PADDING + CELL_SIZE * this.y,
             CELL_SIZE,
             CELL_SIZE];
   },
@@ -225,27 +213,6 @@ Tile.prototype = {
     TILES[this.key()] = this;
   },
 
-  // Drops this existing tile as much as possible.
-  // This won't change the visible location of the tile,
-  // because it uses lift to offset.
-  // Returns whether this could drop.
-  drop: function() {
-    // First, figure out how high of a y we can drop this tile to.
-    for (var newY = LEN - 1; newY > this.y; --newY) {
-      if (getTile(this.x, newY) == null) {
-        break;
-      }
-    }
-    if (newY == this.y) {
-      // We can't drop this tile at all.
-      return false;
-    }
-
-    this.move(this.x, newY);
-    this.lift += CELL_SIZE * (newY - this.y);
-    return true;
-  },
-  
   destroy: function() {
     this.hide();
 
