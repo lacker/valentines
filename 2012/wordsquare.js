@@ -39,11 +39,12 @@ var BEST_LETTERS = ["A", "E", "I", "N", "O", "S", "T"];
 var SELECTED = [];
 
 // Game contains:
+// answer - the Answer object for the game
 // level - which level you're on
-// targetWord - the next answer-word to get, kept in TARGET
 var GAME = {};
 
 // A map from x,y to what letter we are targeting.
+// Constructs the word in GAME.answer.nextWord
 var TARGET = {};
 
 function error(message) {
@@ -81,6 +82,23 @@ function clear() {
              CANVAS_SIZE - 2 * PADDING);
 }
 
+// Resets the board for the given level.
+function resetBoard(level) {
+  GAME.level = level;
+  GAME.answer = new Answer(level);
+
+  eachTile(function(tile) {
+    tile.destroy();
+  });
+  clear();
+  
+  for (var x = 0; x < LEN; ++x) {
+    for (var y = 0; y < LEN; ++y) {
+      var tile = new Tile(x, y, randomLetter());
+      tile.show();
+    }
+  }
+}
 
 // Do stuff
 function main() {
@@ -88,16 +106,9 @@ function main() {
   $("canvas").mousemove(move);
   $("canvas").mouseup(up);
 
-  // TODO: break out resetBoard into a function
-  // resetBoard(1);
-  clear();
-  for (var x = 0; x < LEN; ++x) {
-    for (var y = 0; y < LEN; ++y) {
-      var tile = new Tile(x, y, randomLetter());
-      tile.show();
-    }
-  }
-
+  // TODO: read level from a hash tag
+  resetBoard(1);
+ 
   setInterval(tick, 1000 / FPS);
 }
 $(main);

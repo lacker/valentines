@@ -32,17 +32,25 @@ function unselectAll() {
   }
 }
 
-function tick() {
+// Runs f on each tile
+function eachTile(f) {
   for (var x = 0; x < LEN; ++x) {
     for (var y = 0; y < LEN; ++y) {
       var tile = getTile(x, y);
-      if (tile.scale >= 1) {
-        continue;
+      if (tile != null) {
+        f(tile);
       }
+    }
+  }
+}
+
+function tick() {
+  eachTile(function(tile) {
+    if (tile.scale < 1) {
       tile.scale = Math.min(1, tile.scale + SCALE_PER_FRAME);
       tile.show();
     }
-  }
+  });
 }
 
 // x is 0..5, goes from left to right.
