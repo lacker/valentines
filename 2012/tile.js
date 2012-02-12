@@ -17,6 +17,9 @@ function unselectAll() {
     word += tile.letter;
   });
   var success = DICT[word];
+  if (success) {
+    GAME.frustration += 1;
+  }
   if (word == GAME.answer.nextWord) {
     success = true;
     GAME.answer.next();
@@ -29,8 +32,6 @@ function unselectAll() {
     } else {
       populateTarget();
     }
-  } else {
-    GAME.frustration += 1;
   }
 
   _.each(SELECTED, function(tile) {
@@ -51,7 +52,11 @@ function unselectAll() {
   SELECTED = [];
   if (success) {
     console.log("made: " + word + ". frustration = " + GAME.frustration);
+    if (GAME.frustration == HINT_THRESHOLD) {
+      hint();
+    }
   }
+
 }
 
 // Runs f on each tile
@@ -90,6 +95,7 @@ var Tile = function(x, y, letter) {
   this.scale = 0;
   this.letter = letter;
   this.selected = false;
+  this.hinted = false;
 
   TILES[this.key()] = this;
 };
@@ -124,6 +130,11 @@ Tile.prototype = {
   unselect: function() {
     this.selected = false;
     this.show();
+  },
+
+  // Returns whether this tile is already matching a letter in the target.
+  matchesTarget: function() {
+    return this.letter == GAME.target[this.key()];
   },
   
   corners: function(scale) {
@@ -164,6 +175,8 @@ Tile.prototype = {
     // Color the middle part
     if (this.selected) {
       c.fillStyle = SELECTED_COLOR;
+    } else if (this.hinted) {
+      c.fillStyle = HINTED_COLOR;
     } else {
       c.fillStyle = DEFAULT_COLOR;
     }

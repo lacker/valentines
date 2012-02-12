@@ -2,13 +2,17 @@ console.log("loading wordsquare");
 
 var CANVAS_SIZE = 720;
 
+// How frustrated you can get before you get a hint
+var HINT_THRESHOLD = 4;
+
 // Extra padding on each side of the canvas
 var PADDING = 3;
 var PAD_COLOR = "black";
 
 // Cell colors
-var SELECTED_COLOR = "#BBCCFF";
+var SELECTED_COLOR = "#AED1FE";
 var DEFAULT_COLOR = "white";
+var HINTED_COLOR = "#AEFEC4";
 
 // Number of cells to a row/column
 var LEN = 6;
@@ -19,7 +23,7 @@ var FPS = 40;
 
 var CELL_SIZE = (CANVAS_SIZE - 2 * PADDING) / LEN;
 
-var BACKGROUND = "#FFCCCC";
+var BACKGROUND = "#FEAEAE";
 
 // Our alphabet does not have a Q.
 var ALPHABET = ["A", "B", "C", "D", "E",
@@ -134,6 +138,32 @@ function populateTarget() {
   for (var i = 0; i < path.length; ++i) {
     var key = path[i][0] + "," + path[i][1];
     GAME.target[key] = letters[i];
+  }
+}
+
+// Turns on a hint somewhere.
+// If there's already a hint, this is a no-op.
+function hint() {
+  var tiles = _.map(shuffle(_.keys(GAME.target)), function(key) {
+    return TILES[key];
+  });
+  console.log("hinting. target tiles = " + tiles);
+  if (_.any(tiles, function(tile) {
+    return tile.hinted;
+  })) {
+    // There is already a hint.
+    console.log("there is already a hint");
+    return;
+  }
+  var hintable = _.find(tiles, function(tile) {
+    return !tile.matchesTarget();
+  });
+  if (hintable) {
+    console.log("hinting " + hintable.x + "," + hintable.y);
+    hintable.hinted = true;
+    hintable.show();
+  } else {
+    // XXX add a hint to the global message
   }
 }
 
