@@ -27,6 +27,11 @@ var EASY_LETTERS = ["A", "B", "D", "E", "F", "G",
 
 var BEST_LETTERS = ["A", "E", "I", "N", "O", "S", "T"];
 
+function error(message) {
+  alert(message);
+  throw new Error(message);
+}
+
 function choice(array) {
   return array[Math.floor(Math.random() * array.length)];
 }
@@ -50,6 +55,17 @@ function clear() {
              CANVAS_SIZE - 2 * PADDING);
 }
 
+// Stores all tiles keyed by strings like "3,4" for x,y.
+var TILES = {};
+
+function tileKey(x, y) {
+  return "" + x + "," + y;
+}
+
+function getTile(x, y) {
+  return TILES[tileKey(x, y)];
+}
+
 // Logical location:
 // x is 0..5, goes from left to right.
 // y is 0..5, goes from top to bottom.
@@ -58,14 +74,24 @@ function clear() {
 // lift is how far the tile has to fall to get to its logical location.
 // lift is in pixels.
 var Tile = function(x, y, letter, color) {
+  if (getTile(x, y)) {
+    error("there is already a tile at " + x + "," + y);
+  }
+
   this.x = x;
   this.y = y;
   this.lift = 0;
   this.letter = letter;
   this.color = (color || "white");
+
+  TILES[this.key()] = this;
 };
 
 Tile.prototype = {
+  key: function() {
+    return tileKey(this.x, this.y);
+  },
+  
   corners: function() {
     return [PADDING + CELL_SIZE * this.x,
             PADDING + CELL_SIZE * this.y - this.lift,
@@ -119,6 +145,41 @@ Tile.prototype = {
     c.fillStyle = BACKGROUND;
     c.fillRect.apply(c, this.corners());
   },
+
+  // Does not interact with the view.
+  move: function(x, y) {
+    if (getTile(x, y)) {
+      error("cannot move to " + x + "," + y);
+    }
+    this.x = x;
+    this.y = y;
+  },
+
+  // Drops this existing tile as much as possible.
+  // This won't change the visible location of the tile,
+  // because it uses lift to offset.
+  // Returns whether this could drop.
+  drop: function() {
+    // First, figure out how high of a y we can drop this tile to.
+    for (var new_y = LEN - 1; new_y > y; --new_y) {
+      if (getTile(x, new_y) == null) {
+        break;
+      }
+    }
+    if (new_y == y) {
+      // We can't drop this tile at all.
+      return false;
+    }
+    this.move(x, new_y);
+    this.lift += CELL_SIZE * (new_y - y);
+    return true;
+  },
+  
+  destroy: function() {
+    this.hide();
+
+    delete TILES[this.key()];
+  }
 };
 
 var tiles = [];
@@ -132,9 +193,6 @@ function main() {
       var tile = new Tile(x, y, randomLetter());
       tiles[x][y] = tile;
       tile.show();
-      if (Math.random() < 0.5) {
-        tile.hide();
-      }
     }
   }
 }
