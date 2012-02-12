@@ -28,7 +28,7 @@ function unselectAll() {
     console.log(GAME.answer.fragment);
 
     if (GAME.answer.done()) {
-      resetBoard(GAME.level + 1);
+      resetBoard(GAME.level + 1, true);
     } else {
       populateTarget();
     }

@@ -6,7 +6,7 @@ var CANVAS_SIZE = 720;
 var HINT_THRESHOLD = 4;
 
 // How frustrated you can get before you get a really good hint
-var PERMAHINT_THRESHOLD = 10;
+var PERMAHINT_THRESHOLD = 8;
 
 // Extra padding on each side of the canvas
 var PADDING = 3;
@@ -234,7 +234,10 @@ function clear() {
 }
 
 // Resets the board for the given level.
-function resetBoard(level) {
+function resetBoard(level, updateHash) {
+  if (updateHash) {
+    window.location.hash = "#" + level;
+  }
   GAME.level = level;
   GAME.answer = new Answer(level);
   GAME.permahint = null;
@@ -259,8 +262,17 @@ function main() {
   $("canvas").mousemove(move);
   $("canvas").mouseup(up);
 
-  // TODO: read level from a hash tag
-  resetBoard(1);
+  // read level from a hash tag
+  var level = 1;
+  var tag = window.location.hash.match(/[0-9]+$/);
+  if (tag) {
+    var num = parseInt(tag[0]);
+    if (num > 0) {
+      level = num;
+      setMessage("Level " + level);
+    }
+  }
+  resetBoard(level, false);
  
   setInterval(tick, 1000 / FPS);
 }
