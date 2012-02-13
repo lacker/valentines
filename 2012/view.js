@@ -21,7 +21,7 @@ var Position = function(event) {
   }
 
   // We don't trigger if you're within the buffer from the edge.
-  var buffer = 0.3;
+  var buffer = 0.2;
   var xDiff = this.floatX - this.x;
   var yDiff = this.floatY - this.y;
   if (xDiff < buffer || xDiff > 1 - buffer ||

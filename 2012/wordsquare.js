@@ -3,13 +3,13 @@ console.log("loading wordsquare");
 var CANVAS_SIZE = 980;
 
 // How frustrated you can get before you get a hint
-var HINT_THRESHOLD = 4;
+var HINT_THRESHOLD = 3;
 
 // How frustrated you can get before you get a really good hint
-var PERMAHINT_THRESHOLD = 8;
+var PERMAHINT_THRESHOLD = 6;
 
 // Extra padding on each side of the canvas
-var PADDING = 3;
+var PADDING = 4;
 var PAD_COLOR = "black";
 
 // Cell colors
@@ -21,8 +21,8 @@ var HINTED_COLOR = "#AEFEC4";
 var LEN = 6;
 
 // Animation
-var SCALE_PER_FRAME = 0.025;
-var FPS = 40;
+var SCALE_PER_FRAME = 0.2;
+var FPS = 5;
 
 var CELL_SIZE = (CANVAS_SIZE - 2 * PADDING) / LEN;
 
@@ -256,12 +256,29 @@ function resetBoard(level, updateHash) {
   }
 }
 
+function ontouch(name, f) {
+  var canvas = $("canvas")[0];
+  canvas.addEventListener("touch" + name, function(event) {
+    event.preventDefault();
+    
+    // If there's exactly one finger inside this element
+    if (event.targetTouches.length == 1) {
+      var touch = event.targetTouches[0];
+      f(touch);
+    }
+  }, false);
+}
+
 // Do stuff
 function main() {
   $("canvas").mousedown(down);
   $("canvas").mousemove(move);
   $("canvas").mouseup(up);
 
+  ontouch("start", down);
+  ontouch("move", move);
+  $("html").bind("touchend", up);
+  
   // read level from a hash tag
   var level = 1;
   var tag = window.location.hash.match(/[0-9]+$/);
