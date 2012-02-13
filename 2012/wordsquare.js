@@ -1,6 +1,6 @@
 console.log("loading wordsquare");
 
-var CANVAS_SIZE = 720;
+var CANVAS_SIZE = 980;
 
 // How frustrated you can get before you get a hint
 var HINT_THRESHOLD = 4;
