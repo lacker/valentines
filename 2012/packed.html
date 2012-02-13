@@ -89629,7 +89629,6 @@ var MOUSE = {
 };
 
 function down(e) {
-  setMessage("down");
   MOUSE.down = true;
   var pos = new Position(e);
   if (pos.trigger) {
@@ -89638,7 +89637,6 @@ function down(e) {
 }
 
 function move(e) {
-  setMessage("move");
   if (!MOUSE.down) {
     return;
   }
@@ -89649,7 +89647,6 @@ function move(e) {
 }
 
 function up(e) {
-  setMessage("up");
   MOUSE.down = false;
   unselectAll();
 }
