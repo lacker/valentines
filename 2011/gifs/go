@@ -1,0 +1,52 @@
+#!/bin/bash
+
+gifsicle --colors 256 \
+    \
+    -d 150 IMG_4694.gif IMG_4695.gif \
+    \
+    \
+    -d 50 IMG_4620.gif IMG_4621.gif IMG_4622.gif IMG_4623.gif IMG_4624.gif \
+    -d 100 IMG_4625.gif \
+    \
+    -d 50 IMG_4629.gif IMG_4628.gif IMG_4627.gif -d 150 IMG_4626.gif \
+    \
+    -d 50 IMG_1913.gif IMG_1914.gif IMG_1915.gif IMG_1916.gif IMG_1917.gif \
+    \
+    -d 250 IMG_4630.gif IMG_4631.gif IMG_4632.gif IMG_4631.gif \
+    IMG_4634.gif IMG_4631.gif \
+    \
+    -d 50 IMG_4635.gif IMG_4636.gif IMG_4637.gif IMG_4638.gif IMG_4639.gif \
+    IMG_4640.gif IMG_4641.gif IMG_4642.gif \
+    \
+    -d 50 IMG_4643.gif IMG_4644.gif IMG_4645.gif \
+    -d 150 IMG_4647.gif IMG_4646.gif \
+    \
+    -d 50 IMG_4648.gif IMG_4649.gif IMG_4650.gif IMG_4651.gif \
+    -d 150 IMG_4652.gif IMG_4651.gif \
+    \
+    -d 50 IMG_4653.gif IMG_4654.gif IMG_4655.gif \
+    \
+    -d 50 IMG_4656.gif IMG_4657.gif IMG_4658.gif IMG_4659.gif IMG_4660.gif \
+    IMG_4661.gif IMG_4663.gif \
+    -d 150 IMG_4662.gif IMG_4663.gif \
+    \
+    -d 50 IMG_4664.gif IMG_4665.gif IMG_4666.gif IMG_4667.gif IMG_4668.gif \
+    -d 150 IMG_4669.gif IMG_4670.gif \
+    \
+    -d 50 IMG_4671.gif IMG_4672.gif IMG_4673.gif IMG_4674.gif \
+    \
+    -d 350 IMG_4675.gif IMG_4676.gif \
+    \
+    -d 250 IMG_4677.gif \
+    -d 150 IMG_4678.gif IMG_4679.gif IMG_4680.gif IMG_4681.gif IMG_4682.gif \
+    \
+    -d 350 IMG_4683.gif \
+    -d 150 IMG_4684.gif IMG_4685.gif \
+    \
+    -d 50 IMG_4686.gif IMG_4686.gif \
+    -d 150 IMG_4688.gif \
+    \
+    -d 50 IMG_4689.gif \
+    -d 250 IMG_4690.gif IMG_4691.gif \
+    -d 150 IMG_4692.gif IMG_4693.gif \
+    > ../valentine.gif
