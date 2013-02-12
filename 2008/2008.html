@@ -1,0 +1,73 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <title>Anna Games 2008</title>
+
+    <style>
+      #encloser {
+      float: left;
+      width: 1.5%;
+      }
+
+      #linebreak {
+      align: left;
+      clear: left;
+      }
+
+      #decrypted {
+      padding-top: 3px;
+      text-align: center;
+      cursor: pointer;
+      }
+
+      #highlighted {
+      padding-top: 3px;
+      text-align: center;
+      cursor: default;
+      background-color: #ff9999;
+      }
+
+      #encrypted {
+      text-align: center;
+      cursor: default;
+      padding-top: 10px;
+      }
+    </style>
+
+    <script type="text/javascript" src="2008.js"></script>
+
+  </head>
+
+  <body>
+    <div id=htmljunk>
+      <br>
+      Welcome to Anna Games!<br><br>
+      Click the _'s and type letters to play.<br><br>
+      <h2>Puzzle <span id=number>???</span></h2>
+      <br><br><br>
+    </div>
+    <div id=game></div>
+    <br><br><br><br><br>
+    <input type="submit" value="help!" onclick="CheckHelp(game)">
+    <br><br>
+    <div id=message style="display:none">
+      You got it! Click <a id=nextpuzzle>here</a> for the next puzzle.
+      <br><br>
+    </div>
+    <div id=nohelp style="display:none">
+      You're doing fine, you don't need help! ;-)
+    </div>
+
+    <script type="text/javascript">
+      var answer = "amidst the mist and hoary frost\n" +
+      "with stoutest wrists and loudest boasts";
+
+      var game = new Game(answer);
+
+      document.onkeydown = function(event) {
+      ApplyCode(game, event.keyCode);
+      }
+    </script>
+
+  </body>
+</html>

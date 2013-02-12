@@ -1,0 +1,65 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html> <head>
+<title>Annaken</title>
+<style>
+.cell {
+  border-width: 1px;
+  border-style: solid;
+  border-color: #ddd;
+  height: 60px;
+  width: 60px;
+  float: left;
+}
+.cell_content, .cell_content_with_label {
+  font-size: 40px;
+  text-align: center;
+}
+.cell_content {
+  padding-top: 10px;
+}
+.label {
+  font-size: 12px;
+  height: 10px;
+}
+.clearer {
+  clear: left;
+}
+#secretword {
+  font-size: 40px;
+  color: #FFFFFF;
+}
+</style>
+<script type="text/javascript" src="annakendata.js"></script>
+<script type="text/javascript" src="annaken.js"></script>
+</head>
+
+<body>
+<h1>Welcome to Annaken</h1>
+<div style="padding-left:60px">
+<div style="width:50%">
+  Annaken is like kenken with an Anna theme. Each puzzle has a secret
+  word. You have to put a letter in each square so that each row and
+  column has the same letters as the secret word, just
+  rearranged. There are also extra shapes that are labeled with their
+  own words - you have to make sure the letters in the extra shapes
+  form those words, too. Good luck!
+</div>
+<br>
+<div id=secretword></div>
+<br>
+<div id=game></div>
+<br><br>
+<button id=check_solution>Check solution</button>
+<br><br>
+<div id=congratulations></div>
+</div>
+<script type="text/javascript">
+var game = new Game(get_data_id());
+document.onkeypress = function(event) { game.handle_keypress(event); };
+var button = document.getElementById("check_solution");
+button.onclick = function() {
+  game.check_solution();
+};
+</script>
+
+</body> </html>
