@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<custom:BlocksApp
+    xmlns:mx="http://www.adobe.com/2006/mxml"
+    xmlns:custom="blocks.*"
+    layout="absolute"
+    />
