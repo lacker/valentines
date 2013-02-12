@@ -1,8 +1,5 @@
 A repository of past Valentine's Day entertainment.
 
-To deploy, just copy all files in this repository to a public directory
-on the web somewhere, and index.html will let you browse.
-
 2012 - Wordsquare (mobile game)
 2011 - Hide And Seek (movie)
 2010 - Annablocks (flash game)
@@ -10,3 +7,12 @@ on the web somewhere, and index.html will let you browse.
 2008 - Cryptogram (web game)
 2007 - Jigsaw (web game)
 2006 - The Pursuit Of Justice (movie)
+
+
+To deploy, just copy all files in this repository to a public directory
+on the web somewhere, and index.html will let you browse.
+
+For example, to deploy a particular year with scp to a
+html/valentines directory:
+
+scp -r 2007 lacker@yourdomain.com:~/html/valentines
