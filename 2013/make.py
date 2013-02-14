@@ -17,9 +17,16 @@ from PIL import Image
 def splat(fname, outprefix):
   image = Image.open("sources/" + fname)
   _, _, max_x, max_y = image.getbbox()
-  size = 408
-  x_tiles = max_x / size
-  y_tiles = max_y / size
+  if max_x + max_y == 5712:
+    size = 408
+    x_tiles = max_x / size
+    y_tiles = max_y / size
+  elif max_x == 2592:
+    size = 322
+    x_tiles = 8
+    y_tiles = 6
+  else:
+    raise Exception("%s has weird dimensions: %d by %d" % (fname, max_x, max_y))
   for x in range(x_tiles):
     for y in range(y_tiles):
       left = x * size
