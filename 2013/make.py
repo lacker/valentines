@@ -30,12 +30,17 @@ def splat(fname, outprefix):
         # vertical iPhone pictures appear to be stored rotated to the left
         # by 90 degrees.
         # So we need to rotate by 90 degrees clockwise here.
-        x, y = max_y - y, x
-        tile = tile.transpose(Image.ROTATE_270)
+        rotated_x = y_tiles - y - 1
+        rotated_y = x
+        rotated_tile = tile.transpose(Image.ROTATE_270)
 
-      outname = "pieces/%s_%d_%d.jpg" % (outprefix, x, y)
-      print "generating", outname
-      tile.save(outname)
+        outname = "pieces/%s_%d_%d.jpg" % (outprefix, rotated_x, rotated_y)
+        print "generating rotated:", outname
+        rotated_tile.save(outname)
+      else:
+        outname = "pieces/%s_%d_%d.jpg" % (outprefix, x, y)
+        print "generating", outname
+        tile.save(outname)
   
 def makeall():
   for n in [40, 43, 87, 98, 99, 102, 103, 104, 112, 122, 123, 131]:
