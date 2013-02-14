@@ -18,7 +18,7 @@ var PIC_NAME = PIECES_DIR + PREFIX;
 // Sadly, correct_x and correct_y assume these are single digits.
 var NUM_X_TILES = 8;
 var NUM_Y_TILES = 6;
-if (PIC_NAME[0] == "v") {
+if (PREFIX[0] == "v") {
   NUM_X_TILES = 6;
   NUM_Y_TILES = 8;
 }
