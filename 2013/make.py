@@ -25,10 +25,6 @@ def splat(fname, outprefix):
     size = 322
     x_tiles = 8
     y_tiles = 6
-  elif max_x == 1452:
-    size = 242
-    x_tiles = 6
-    y_tiles = 8
   else:
     raise Exception("%s has weird dimensions: %d by %d" % (fname, max_x, max_y))
   for x in range(x_tiles):
@@ -57,8 +53,7 @@ def makeall():
   for n in [40, 43, 87, 98, 99, 102, 103, 104, 112, 122, 123, 131]:
     splat("horizontal/IMG_%04d.JPG" % n, "h%d" % n)
   for n in [29, 30, 32, 33, 38, 44, 45, 48, 49, 51, 58, 62, 63, 64,
-            71, 76, 80, 86, 91, 93, 94, 105, 109, 111, 113, 128,
-            133, 137]:
+            71, 76, 80, 86, 91, 93, 105, 109, 113, 128, 137]:
     splat("vertical/IMG_%04d.JPG" % n, "v%d" % n)
     
 if __name__ == "__main__":
