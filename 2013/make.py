@@ -25,6 +25,10 @@ def splat(fname, outprefix):
     size = 322
     x_tiles = 8
     y_tiles = 6
+  elif max_x == 1452:
+    size = 242
+    x_tiles = 6
+    y_tiles = 8
   else:
     raise Exception("%s has weird dimensions: %d by %d" % (fname, max_x, max_y))
   for x in range(x_tiles):
