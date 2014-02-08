@@ -8,6 +8,22 @@ function show_intro() {
   // TODO: center this or make it look cooler
   div.text("how many steps can Alex take before bonking into a table? tap to begin!");
   $("#container").empty().append(div);
+
+  GLOBALS.tap = function() {
+    start_game();
+  }
+}
+
+function start_game() {
+  var alex = $("<div>");
+  var img = $('<img id="dynamic">');
+  img.attr('src', "./alex.png");
+  alex.append(img);
+
+  $("#container").empty().append(alex);
+  GLOBALS.tap = function() {
+    console.log("game tap!");
+  }
 }
 
 $(function() {
@@ -17,5 +33,6 @@ $(function() {
   container.css("position", "relative");
   container.css("margin-top", "0px");
   container.css("background-color", "#eee");
+  container.on("click tap", function() { GLOBALS.tap(); });
   show_intro();
 });
