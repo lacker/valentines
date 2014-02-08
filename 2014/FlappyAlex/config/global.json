@@ -1,0 +1,14 @@
+{
+    "applications": {
+        "FlappyAlex": {
+            "applicationId": "awWI09RTORl9bFXWRI8sKtGasrRU5qsXvpJrdIoE", 
+            "masterKey": "PQdIUkrIU7LdT3wFhG8LwXCmDokHlga7ll0xSNmk"
+        }, 
+        "_default": {
+            "link": "FlappyAlex"
+        }
+    }, 
+    "global": {
+        "parseVersion": "1.2.16"
+    }
+}
