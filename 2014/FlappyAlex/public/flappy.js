@@ -5,7 +5,6 @@ var container = null;
 
 function show_intro() {
   var div = $("<div>");
-  // TODO: center this or make it look cooler
   div.text("how many steps can Alex take before bonking into a table? tap to begin!");
   $("#container").empty().append(div);
 
@@ -16,6 +15,11 @@ function show_intro() {
 
 function start_game() {
   var alex = $("<div>");
+  alex.width(235);
+  alex.height(277);
+  alex.css("position", "absolute");
+  alex.css("left", "0px");
+  alex.css("top", "0px");
   var img = $('<img id="dynamic">');
   img.attr('src', "./alex.png");
   alex.append(img);
