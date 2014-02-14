@@ -1,9 +1,9 @@
 // Designed for an iPad running at 2048 x 1536 resolution held vertically.
 var GLOBALS = {};
-var ALEX_WIDTH = 225;
-var ALEX_HEIGHT = 398;
-var TABLE_WIDTH = 500;
-var TABLE_HEIGHT = 500;
+var ALEX_WIDTH = 113;
+var ALEX_HEIGHT = 199;
+var TABLE_WIDTH = 250;
+var TABLE_HEIGHT = 250;
 var container = null;
 
 // Scales things so we can test in a browser
@@ -71,7 +71,7 @@ function start_game() {
 
   // These are fractions in 0-1
   GLOBALS.alex_x = 0.2;
-  GLOBALS.alex_y = 0.5;
+  GLOBALS.alex_y = 0.8;
   move_table();
 
   // These define physics
@@ -155,7 +155,7 @@ function stop_game(bonkee) {
 
   var ticks = 0;
   GLOBALS.tap = function() {
-    if (ticks > 10) {
+    if (ticks > 4) {
       start_game();
     }
   }
@@ -165,6 +165,10 @@ function stop_game(bonkee) {
 }
 
 $(function() {
+  document.ontouchmove = function(event){
+    event.preventDefault();
+  }
+
   var container = $("#container");
   GLOBALS.height = $(window).height();
   GLOBALS.width = $(window).width();
@@ -177,6 +181,6 @@ $(function() {
     if (GLOBALS.tick) {
       GLOBALS.tick();
     }
-  }, 50);
+  }, 120);
   show_intro();
 });
