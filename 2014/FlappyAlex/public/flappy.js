@@ -1,7 +1,7 @@
 // Designed for an iPad running at 2048 x 1536 resolution held vertically.
 var GLOBALS = {};
-var ALEX_WIDTH = 235;
-var ALEX_HEIGHT = 277;
+var ALEX_WIDTH = 225;
+var ALEX_HEIGHT = 398;
 var TABLE_WIDTH = 500;
 var TABLE_HEIGHT = 500;
 var IPAD_WIDTH = 1536;
@@ -84,7 +84,7 @@ function start_game() {
   var alex_pic = $('<img id="dynamic">');
   alex_pic.width(scale(ALEX_WIDTH));
   alex_pic.height(scale(ALEX_HEIGHT));
-  alex_pic.attr('src', "./alex.png");
+  alex_pic.attr('src', "./alex1.png");
   alex.append(alex_pic);
   position_alex();
 
