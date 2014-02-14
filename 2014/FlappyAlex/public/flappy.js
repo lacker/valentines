@@ -60,6 +60,14 @@ function move_table() {
   console.log("putting table at y = " + GLOBALS.table_y);
 }
 
+function pic_alex() {
+  if (GLOBALS.steps % 2 == 0) {
+    GLOBALS.alex_pic.attr('src', "./alex1.png");
+  } else {
+    GLOBALS.alex_pic.attr('src', "./alex2.png");
+  }
+}
+
 function start_game() {
   GLOBALS.steps = 0;
 
@@ -81,10 +89,10 @@ function start_game() {
   alex.height(scale(ALEX_HEIGHT));
   alex.css("position", "absolute");
   alex.css("left", "" + scale(IPAD_WIDTH * GLOBALS.alex_x) + "px");
-  var alex_pic = $('<img id="dynamic">');
+  var alex_pic = GLOBALS.alex_pic = $('<img id="dynamic">');
   alex_pic.width(scale(ALEX_WIDTH));
   alex_pic.height(scale(ALEX_HEIGHT));
-  alex_pic.attr('src', "./alex1.png");
+  pic_alex();
   alex.append(alex_pic);
   position_alex();
 
@@ -106,6 +114,7 @@ function start_game() {
     if (GLOBALS.alex_dy < 0) {
       // Take a step
       GLOBALS.steps += 1;
+      pic_alex();
     }
     GLOBALS.alex_dy = GLOBALS.step_dy;
   }
