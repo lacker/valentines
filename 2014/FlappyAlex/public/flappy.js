@@ -4,13 +4,11 @@ var ALEX_WIDTH = 225;
 var ALEX_HEIGHT = 398;
 var TABLE_WIDTH = 500;
 var TABLE_HEIGHT = 500;
-var IPAD_WIDTH = 1536;
-var IPAD_HEIGHT = 2048;
 var container = null;
 
 // Scales things so we can test in a browser
 function scale(scalar) {
-  return Math.round(scalar * 0.2);
+  return scalar; // Math.round(scalar * 0.2);
 }
 
 function show_intro() {
@@ -43,12 +41,12 @@ function collision($div1, $div2) {
 }
 
 function position_alex() {
-  GLOBALS.alex.css("top", "" + scale(IPAD_HEIGHT * (1 - GLOBALS.alex_y)) + "px");
+  GLOBALS.alex.css("top", "" + scale(GLOBALS.height * (1 - GLOBALS.alex_y)) + "px");
 }
 
 function position_table() {
-  var left = scale(IPAD_WIDTH * GLOBALS.table_x);
-  var top = scale(IPAD_HEIGHT * (1 - GLOBALS.table_y));
+  var left = scale(GLOBALS.width * GLOBALS.table_x);
+  var top = scale(GLOBALS.height * (1 - GLOBALS.table_y));
                   
   GLOBALS.table.css("left", "" + left + "px");
   GLOBALS.table.css("top", "" + top + "px");
@@ -56,7 +54,7 @@ function position_table() {
 
 function move_table() {
   GLOBALS.table_x = 1.0;
-  GLOBALS.table_y = 1 - Math.random() * ((IPAD_HEIGHT - TABLE_HEIGHT) / IPAD_HEIGHT);
+  GLOBALS.table_y = 1 - Math.random() * ((GLOBALS.height - TABLE_HEIGHT) / GLOBALS.height);
   console.log("putting table at y = " + GLOBALS.table_y);
 }
 
@@ -88,7 +86,7 @@ function start_game() {
   alex.width(scale(ALEX_WIDTH));
   alex.height(scale(ALEX_HEIGHT));
   alex.css("position", "absolute");
-  alex.css("left", "" + scale(IPAD_WIDTH * GLOBALS.alex_x) + "px");
+  alex.css("left", "" + scale(GLOBALS.width * GLOBALS.alex_x) + "px");
   var alex_pic = GLOBALS.alex_pic = $('<img id="dynamic">');
   alex_pic.width(scale(ALEX_WIDTH));
   alex_pic.height(scale(ALEX_HEIGHT));
@@ -128,7 +126,7 @@ function start_game() {
     GLOBALS.alex_y += GLOBALS.alex_dy;
     GLOBALS.table_x += GLOBALS.table_dx;
 
-    if (GLOBALS.table_x + (TABLE_WIDTH / IPAD_WIDTH) < 0) {
+    if (GLOBALS.table_x + (TABLE_WIDTH / GLOBALS.width) < 0) {
       move_table();
     }
 
@@ -136,7 +134,7 @@ function start_game() {
     position_table();
 
     // Check for collision
-    if (GLOBALS.alex_y < (ALEX_HEIGHT / IPAD_HEIGHT)) {
+    if (GLOBALS.alex_y < (ALEX_HEIGHT / GLOBALS.height)) {
       stop_game("the wall");
     } else if (GLOBALS.alex_y > 1) {
       stop_game("the wall");
@@ -168,8 +166,10 @@ function stop_game(bonkee) {
 
 $(function() {
   var container = $("#container");
-  container.height(scale(IPAD_HEIGHT));
-  container.width(scale(IPAD_WIDTH));
+  GLOBALS.height = $(window).height();
+  GLOBALS.width = $(window).width();
+  container.height(scale(GLOBALS.height));
+  container.width(scale(GLOBALS.width));
   container.css("position", "relative");
   container.css("background-color", "#fff");
   container.on("click tap", function() { GLOBALS.tap(); });
