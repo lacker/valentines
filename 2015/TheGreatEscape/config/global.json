@@ -1,0 +1,14 @@
+{
+    "applications": {
+        "TheGreatEscape": {
+            "applicationId": "NauAvPQ7x38QqvrFm9w1C57rgTWJShHcZVXxvtFI", 
+            "masterKey": "JU0RWhnpMcdkk3x2KCFz9zVpxust23Qp5XnXh3MY"
+        }, 
+        "_default": {
+            "link": "TheGreatEscape"
+        }
+    }, 
+    "global": {
+        "parseVersion": "1.3.4"
+    }
+}
