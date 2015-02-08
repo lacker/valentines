@@ -23,6 +23,36 @@ function isValidPosition(row, col) {
   return true
 }
 
+// Returns a list of {row: r, col: c} neighbors, including some
+// invalid spots.
+function neighborsIncludingInvalid(row, col) {
+  return [
+    {row: row, col: col + 1},
+    {row: row, col: col - 1},
+    {row: row + 1, col: col},
+    {row: row - 1, col: col},
+    {row: row + 1, col: col + 1},
+    {row: row - 1, col: col - 1}]
+}
+
+// Returns a list of neighbors but only the valid ones.
+function neighbors(row, col) {
+  var all = neighborsIncludingInvalid(row, col)
+  var answer = []
+  all.map(function(cell) {
+    if (isValidPosition(cell.row, cell.col)) {
+      answer.push(cell)
+    }
+  })
+  return answer
+}
+
+// Returns whether a cell is on the edge
+function onEdge(row, col) {
+  return (neighbors(row, col).length !=
+    neighborsIncludingInvalid(row, col).length)
+}
+
 var Cell = React.createClass({
   render: function() {
     var style = {
@@ -53,6 +83,13 @@ var GameBoard = React.createClass({
     cell.content = "barrier"
     this.setState({cells: this.state.cells, cellArray: this.state.cellArray})
     return true
+  },
+
+  // Each empty cell has a score indicating the distance to the edge,
+  // or null if it's unknown.
+  // This clears all the scores to null.
+  clearCellScores: function() {
+
   },
 
   moveAlex: function() {
