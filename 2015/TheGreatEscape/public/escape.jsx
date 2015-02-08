@@ -87,9 +87,48 @@ var GameBoard = React.createClass({
 
   // Each empty cell has a score indicating the distance to the edge,
   // or null if it's unknown.
-  // This clears all the scores to null.
-  clearCellScores: function() {
+  updateCellScores: function() {
+    // Clear all the scores to null.
+    this.state.cellArray.map(function(cell) {
+      cell.score = null
+    })
 
+    var round = 1
+    var state = this.state
+    while (true) {
+      var didUpdate = false
+      state.cellArray.map(function(cell) {
+        if (cell.score != null) {
+          return
+        }
+
+        if (cell.content != "empty") {
+          return
+        }
+
+        if (onEdge(cell.row, cell.col)) {
+          cell.score = round
+          didUpdate = true
+          return
+        }
+
+        // We can set a cell if one of its neighbors has already been scored
+        var ns = neighbors(cell.row, cell.col)
+        var hasScoredNeighbor = false
+        ns.map(function(neighbor) {
+          var neighborCell = state.cells[neighbor.row][neighbor.col]
+          if (neighborCell.score == round - 1) {
+            cell.score = round
+            didUpdate = true
+          }
+        })
+      })
+
+      round++
+      if (!didUpdate) {
+        break
+      }
+    }
   },
 
   moveAlex: function() {
@@ -173,5 +212,5 @@ $(document).ready(function() {
 console.log("escape.jsx loaded")
 
 function t() {
-  GameBoard.board.moveAlex()
+  GameBoard.board.updateCellScores()
 }
