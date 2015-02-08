@@ -1,5 +1,16 @@
 var RADIUS = 5
 
+// Stolen from stack overflow
+function shuffle(array) {
+  for (var i = array.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var temp = array[i];
+    array[i] = array[j];
+    array[j] = temp;
+  }
+  return array;
+}
+
 // Returns whether this row, col is on the board
 function isValidPosition(row, col) {
   if (row < 0) {
@@ -44,6 +55,7 @@ function neighbors(row, col) {
       answer.push(cell)
     }
   })
+  shuffle(answer)
   return answer
 }
 
@@ -75,13 +87,12 @@ var Cell = React.createClass({
 var GameBoard = React.createClass({
   // Returns whether a barrier-add was successful
   addBarrier: function(row, col) {
-    console.log("addBarrier(" + row + "," + col + ")")
     var cell = this.state.cells[row][col]
     if (cell.content != "empty") {
       return false
     }
     cell.content = "barrier"
-    this.setState({cells: this.state.cells, cellArray: this.state.cellArray})
+    this.touchState()
     return true
   },
 
@@ -131,11 +142,68 @@ var GameBoard = React.createClass({
     }
   },
 
+  findAlex: function() {
+    // Find Alex
+    var alex = null
+    this.state.cellArray.map(function(cell) {
+      if (cell.content == "alex") {
+        alex = cell
+      }
+    })
+    return alex
+  },
+
+  touchState: function() {
+    this.setState({cells: this.state.cells, cellArray: this.state.cellArray})
+  },
+
+  // Returns:
+  // "ok" if alex moves fine
+  // "escape" if alex escaped the board
+  // "no" if alex cannot move
+  // This also sets the state appropriately.
   moveAlex: function() {
-    
+    this.updateCellScores()
+    var alex = this.findAlex()
+
+    if (onEdge(alex.row, alex.col)) {
+      alex.content = "empty"
+      this.touchState()
+      console.log("alex escaped!")
+      return "escape"
+    }
+
+    var bestSpot = null
+    var ns = neighbors(alex.row, alex.col)
+    var state = this.state
+    ns.map(function(n) {
+      var neighbor = state.cells[n.row][n.col]
+      if (neighbor.score == null) {
+        console.log("cannot move to " + n.row + "," + n.col)
+        return
+      }
+      if (bestSpot == null || bestSpot.score > neighbor.score) {
+        console.log("moving to " + n.row + "," + n.col + " looks good")
+        bestSpot = neighbor
+      } else {
+        console.log("moving to " + n.row + "," + n.col + " looks bad")
+      }
+    })
+
+    if (bestSpot == null) {
+      console.log("alex is trapped!")
+      return "no"
+    }
+
+    bestSpot.content = "alex"
+    alex.content = "empty"
+    this.touchState()
+    return "ok"
   },
 
   getInitialState: function() {
+    console.log("setting up the game")
+
     // Ugly hack
     GameBoard.board = this
 
@@ -175,7 +243,10 @@ var GameBoard = React.createClass({
         content={cell.content}
         row={cell.row}
         col={cell.col}
-        onClick={function() { gameBoard.addBarrier(cell.row, cell.col) }}
+        onClick={function() {
+          gameBoard.addBarrier(cell.row, cell.col)
+          gameBoard.moveAlex()
+        }}
         key={"cell" + cell.row + "-" + cell.col}
         />;
       })}
