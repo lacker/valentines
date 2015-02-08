@@ -11,7 +11,7 @@ var Cell = React.createClass({
       style.backgroundColor = "red"
     }
     return (
-      <div className="cell" style={style}>
+      <div className="cell" style={style} onClick={this.props.onClick}>
       </div>
     );
   }
@@ -20,12 +20,14 @@ var Cell = React.createClass({
 var GameBoard = React.createClass({
   // Returns whether a barrier-add was successful
   addBarrier: function(row, col) {
+    console.log("addBarrier(" + row + "," + col + ")")
     var cell = this.state.cells[row][col]
     if (cell.content != "empty") {
       return false
     }
     cell.content = "barrier"
     this.setState({cells: this.state.cells, cellArray: this.state.cellArray})
+    return true
   },
 
   getInitialState: function() {
@@ -63,6 +65,7 @@ var GameBoard = React.createClass({
   },
 
   render: function() {
+    var gameBoard = this
     return (
       <div className="gameboard">
       {this.state.cellArray.map(function(cell) {
@@ -70,6 +73,7 @@ var GameBoard = React.createClass({
         content={cell.content}
         row={cell.row}
         col={cell.col}
+        onClick={function() { gameBoard.addBarrier(cell.row, cell.col) }}
         key={"cell" + cell.row + "-" + cell.col}
         />;
       })}
@@ -88,10 +92,6 @@ var Message = React.createClass({
   }
 })
 
-function addBarrier(row, col) {
-  // TODO: implement
-}
-
 $(document).ready(function() {
 
   React.render(
@@ -109,7 +109,3 @@ $(document).ready(function() {
 
 console.log("escape.jsx loaded")
 
-// Test stuff
-function t() {
-  GameBoard.board.addBarrier(0, 0)
-}
