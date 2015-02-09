@@ -92,7 +92,7 @@ var GameBoard = React.createClass({
       return false
     }
     cell.content = "barrier"
-    this.touchState()
+    this.forceUpdate()
     return true
   },
 
@@ -153,24 +153,18 @@ var GameBoard = React.createClass({
     return alex
   },
 
-  touchState: function() {
-    this.setState({cells: this.state.cells, cellArray: this.state.cellArray})
-  },
-
-  // Returns:
-  // "ok" if alex moves fine
-  // "escape" if alex escaped the board
-  // "no" if alex cannot move
-  // This also sets the state appropriately.
+  // This sets the state appropriately.
+  // This method is where winner gets declared for ongoing games.
   moveAlex: function() {
     this.updateCellScores()
     var alex = this.findAlex()
 
     if (onEdge(alex.row, alex.col)) {
       alex.content = "empty"
-      this.touchState()
+      this.state.winner = "alex"
+      this.forceUpdate()
       console.log("alex escaped!")
-      return "escape"
+      return
     }
 
     var bestSpot = null
@@ -179,28 +173,31 @@ var GameBoard = React.createClass({
     ns.map(function(n) {
       var neighbor = state.cells[n.row][n.col]
       if (neighbor.score == null) {
-        console.log("cannot move to " + n.row + "," + n.col)
         return
       }
       if (bestSpot == null || bestSpot.score > neighbor.score) {
-        console.log("moving to " + n.row + "," + n.col + " looks good")
         bestSpot = neighbor
-      } else {
-        console.log("moving to " + n.row + "," + n.col + " looks bad")
       }
     })
 
     if (bestSpot == null) {
       console.log("alex is trapped!")
-      return "no"
+      this.state.winner = "you"
+      this.forceUpdate()
+      return
     }
 
     bestSpot.content = "alex"
     alex.content = "empty"
-    this.touchState()
-    return "ok"
+    this.state.winner = null
+    this.forceUpdate()
   },
 
+  // Components of the state:
+  // cells maps [row][col] to a cell
+  // cellArray is just an array of all cells, for convenience
+  // winner is null if the game is ongoing, "alex" if he beat you, and
+  // "you" if you won.
   getInitialState: function() {
     console.log("setting up the game")
 
@@ -231,12 +228,29 @@ var GameBoard = React.createClass({
         cellArray.push(cell)
       } 
     }
-    return {cells: cells, cellArray: cellArray}
+    return {cells: cells, cellArray: cellArray, winner: null}
+  },
+
+  message: function() {
+    if (this.state.winner == "you") {
+      return "Good work! You trapped Alex with a fence of toys. Click to play again!"
+    }
+    if (this.state.winner == "alex") {
+      return "Oh no! Alex escaped. He is probably rubbing peanut butter on the wall in the other room now. Click to play again!"
+    }
+    return "Alex is trying to escape! Trap him by creating toy barriers."
+  },
+
+  handleClick: function(row, col) {
+    this.addBarrier(row, col)
+    this.moveAlex()
   },
 
   render: function() {
     var gameBoard = this
     return (
+      <div>
+      <div id="box">
       <div className="gameboard">
       {this.state.cellArray.map(function(cell) {
         return <Cell
@@ -244,22 +258,18 @@ var GameBoard = React.createClass({
         row={cell.row}
         col={cell.col}
         onClick={function() {
-          gameBoard.addBarrier(cell.row, cell.col)
-          gameBoard.moveAlex()
+          gameBoard.handleClick(cell.row, cell.col)
         }}
         key={"cell" + cell.row + "-" + cell.col}
         />;
       })}
       </div>
-    );
-  }
-})
-
-var Message = React.createClass({
-  render: function() {
-    return (
+      </div>
+      <div id="footer">
       <div className="message">
-      Alex is trying to escape! Trap him by creating toy barriers.
+      {this.message()}
+      </div>
+      </div>
       </div>
     );
   }
@@ -269,12 +279,7 @@ $(document).ready(function() {
 
   React.render(
     <GameBoard />,
-    document.getElementById("box")
-  );
-
-  React.render(
-    <Message />,
-    document.getElementById("footer")
+    document.getElementById("everything")
   );
 
   console.log("called ready")
@@ -283,5 +288,4 @@ $(document).ready(function() {
 console.log("escape.jsx loaded")
 
 function t() {
-  GameBoard.board.updateCellScores()
 }
