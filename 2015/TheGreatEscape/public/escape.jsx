@@ -68,8 +68,8 @@ function onEdge(row, col) {
 var Cell = React.createClass({
   render: function() {
     var style = {
-      top: 50 * this.props.row,
-      left: 125 + 50 * this.props.col - 25 * this.props.row,
+      top: 51 * this.props.row,
+      left: 267 + 51 * this.props.col - 25.5 * this.props.row,
     }
     if (this.props.content == "barrier") {
       style.backgroundColor = "black"
@@ -233,17 +233,22 @@ var GameBoard = React.createClass({
 
   message: function() {
     if (this.state.winner == "you") {
-      return "Good work! You trapped Alex with a fence of toys. Click to play again!"
+      return "Good work! You trapped Alex with a fence of toys. Click the board to play again!"
     }
     if (this.state.winner == "alex") {
-      return "Oh no! Alex escaped. He is probably rubbing peanut butter on the wall in the other room now. Click to play again!"
+      return "Oh no! Alex escaped. He is probably rubbing peanut butter on the wall in the other room now. Click the board to play again!"
     }
     return "Alex is trying to escape! Trap him by creating toy barriers."
   },
 
   handleClick: function(row, col) {
-    this.addBarrier(row, col)
-    this.moveAlex()
+    if (this.state.winner != null) {
+      this.setState(this.getInitialState())
+    } else {
+      if (this.addBarrier(row, col)) {
+        this.moveAlex()
+      }
+    }
   },
 
   render: function() {
