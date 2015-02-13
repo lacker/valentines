@@ -71,8 +71,13 @@ var Cell = React.createClass({
       top: 51 * this.props.row,
       left: 267 + 51 * this.props.col - 25.5 * this.props.row,
     }
+    if (this.pic == null) {
+      var pics = ["blocks", "bottle", "bus"]
+      this.pic = pics[Math.floor(Math.random() * pics.length)]
+    }
     if (this.props.content == "barrier") {
-      style.backgroundColor = "black"
+      style.backgroundImage = "url(./" + this.pic + ".png)"
+      style.backgroundSize = "100%"
     }
     if (this.props.content == "alex") {
       style.backgroundImage = "url(./alex100.png)"
