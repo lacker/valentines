@@ -72,7 +72,8 @@ var Cell = React.createClass({
       left: 267 + 51 * this.props.col - 25.5 * this.props.row,
     }
     if (this.pic == null) {
-      var pics = ["blocks", "bottle", "bus"]
+      var pics = ["blocks", "bottle", "bus", "frogs", "garden",
+        "humans", "mower", "puppet", "roomba", "shoes"]
       this.pic = pics[Math.floor(Math.random() * pics.length)]
     }
     if (this.props.content == "barrier") {
