@@ -75,7 +75,7 @@ var Cell = React.createClass({
       style.backgroundColor = "black"
     }
     if (this.props.content == "alex") {
-      style.backgroundColor = "red"
+      style.backgroundImage = "url(./alex50.png)"
     }
     return (
       <div className="cell" style={style} onClick={this.props.onClick}>
