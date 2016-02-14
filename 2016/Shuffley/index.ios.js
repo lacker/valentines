@@ -7,13 +7,26 @@ import React, {
   View
 } from 'react-native';
 
-class Shuffley extends Component {
+class Tile extends Component {
   render() {
     return (
+      <Text style={styles.tile}>
+        {this.props.letter}
+      </Text>
+    );
+  }
+}
+
+class Shuffley extends Component {
+  render() {
+    let word = 'JUPITER';
+    let parts = [];
+    for (let letter of word) {
+      parts.push(<Tile letter={letter} />);
+    }
+    return (
       <View style={styles.container}>
-        <Text style={styles.mainText}>
-        JUPITER
-        </Text>
+        {parts}
       </View>
     );
   }
@@ -26,7 +39,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
   },
-  mainText: {
+  tile: {
     fontSize: 128,
     textAlign: 'center',
     margin: 10,
