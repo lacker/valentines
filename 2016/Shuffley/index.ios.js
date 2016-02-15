@@ -21,8 +21,10 @@ class Shuffley extends Component {
   render() {
     let word = 'JUPITER';
     let parts = [];
+    let key = 0;
     for (let letter of word) {
-      parts.push(<Tile letter={letter} />);
+      parts.push(<Tile letter={letter} key={key}/>);
+      key++;
     }
     return (
       <View style={styles.container}>
