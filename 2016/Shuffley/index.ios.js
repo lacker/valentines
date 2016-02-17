@@ -28,9 +28,11 @@ class Shuffley extends Component {
     }
     return (
       <View style={styles.container}>
+        <View style={{alignSelf: 'flex-start'}} />
         <View style={styles.rack}>
           {parts}
         </View>
+        <View style={{alignSelf: 'flex-end'}} />
       </View>
     );
   }
@@ -40,7 +42,7 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#00FF00',
+    flex: 1,
   },
   rack: {
     backgroundColor: '#FF0000',
