@@ -27,8 +27,10 @@ class Shuffley extends Component {
       key++;
     }
     return (
-      <View style={styles.container}>
-        {parts}
+      <View style={{alignItems: 'center'}}>
+        <View style={styles.container}>
+          {parts}
+        </View>
       </View>
     );
   }
@@ -36,13 +38,13 @@ class Shuffley extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center',
+    // alignItems: 'center',
     backgroundColor: '#F5FCFF',
   },
   tile: {
-    fontSize: 128,
+    fontSize: 32,
     textAlign: 'center',
     margin: 10,
   },
