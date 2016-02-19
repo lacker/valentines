@@ -12,11 +12,14 @@ import Dimensions from 'Dimensions';
 class Tile extends Component {
   render() {
     return (
-      <View>
-        <Text style={[styles.tile, {
+      <View style={[styles.tile, {
+        height: this.props.size,
+      }]}>
+        <Text style={[styles.tileText, {
           width: this.props.size,
-          height: this.props.size,
-          }]}>
+          height: this.props.size / 2,
+          fontSize: this.props.size / 2,
+        }]}>
           {this.props.letter}
         </Text>
       </View>
@@ -28,7 +31,9 @@ class Shuffley extends Component {
   render() {
     let word = 'JUPITER';
     let width = Dimensions.get('window').width;
-    let size = Math.floor(width / word.length);
+    let height = Dimensions.get('window').height;
+    let bigger = width < height ? height : width;
+    let size = Math.floor(bigger / word.length);
     let parts = [];
     let key = 0;
     for (let letter of word) {
@@ -55,15 +60,15 @@ const styles = StyleSheet.create({
   },
   rack: {
     justifyContent: 'space-around',
-    backgroundColor: '#FF0000',
     flexDirection: 'row',
   },
-  tile: {
+  tileText: {
     backgroundColor: '#FFFF00',
-    fontSize: 32,
     textAlign: 'center',
-    margin: 10,
   },
+  tile: {
+    backgroundColor: '#FF0000',
+  }
 });
 
 AppRegistry.registerComponent('Shuffley', () => Shuffley);
