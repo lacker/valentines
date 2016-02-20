@@ -17,7 +17,6 @@ class Tile extends Component {
       }]}>
         <Text style={[styles.tileText, {
           width: this.props.size,
-          height: this.props.size / 2,
           fontSize: this.props.size / 2,
         }]}>
           {this.props.letter}
@@ -29,7 +28,9 @@ class Tile extends Component {
 
 class Shuffley extends Component {
   render() {
-    let word = 'JUPITER';
+    let words = ['JUPITER', 'MARS', 'MOON', 'EARTH', 'SATURN',
+                 'MERCURY', 'VENUS', 'NEPTUNE'];
+    let word = words[Math.floor(Math.random() * words.length)];
     let width = Dimensions.get('window').width;
     let height = Dimensions.get('window').height;
     let bigger = width < height ? height : width;
