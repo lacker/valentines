@@ -28,7 +28,8 @@ class Tile extends Component {
   }
 }
 
-const tileBorderSize = 3;
+const tileBorderWidth = 1;
+const tileMargin = 1;
 
 class Shuffley extends Component {
   render() {
@@ -38,7 +39,8 @@ class Shuffley extends Component {
     let width = Dimensions.get('window').width;
     let height = Dimensions.get('window').height;
     let bigger = width < height ? height : width;
-    let size = Math.floor(bigger / word.length) - 2 * tileBorderSize;
+    let size = Math.floor(bigger / word.length) - 2 * (
+      tileBorderWidth + tileMargin);
     let parts = [];
     let key = 0;
     for (let letter of word) {
@@ -72,7 +74,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   tile: {
-    borderWidth: tileBorderSize,
+    margin: tileMargin,
+    borderWidth: tileBorderWidth,
     borderColor: '#000000',
     backgroundColor: '#FF0000',
   }
