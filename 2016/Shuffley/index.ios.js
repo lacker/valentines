@@ -14,6 +14,8 @@ class Tile extends Component {
     return (
       <View style={[styles.tile, {
         height: this.props.size,
+        flexDirection: 'row',
+        alignItems: 'center',
       }]}>
         <Text style={[styles.tileText, {
           width: this.props.size,
@@ -26,6 +28,8 @@ class Tile extends Component {
   }
 }
 
+const tileBorderSize = 3;
+
 class Shuffley extends Component {
   render() {
     let words = ['JUPITER', 'MARS', 'MOON', 'EARTH', 'SATURN',
@@ -34,7 +38,7 @@ class Shuffley extends Component {
     let width = Dimensions.get('window').width;
     let height = Dimensions.get('window').height;
     let bigger = width < height ? height : width;
-    let size = Math.floor(bigger / word.length);
+    let size = Math.floor(bigger / word.length) - 2 * tileBorderSize;
     let parts = [];
     let key = 0;
     for (let letter of word) {
@@ -68,6 +72,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   tile: {
+    borderWidth: tileBorderSize,
+    borderColor: '#000000',
     backgroundColor: '#FF0000',
   }
 });
