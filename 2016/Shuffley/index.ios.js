@@ -16,6 +16,7 @@ class Tile extends Component {
         height: this.props.size,
         flexDirection: 'row',
         alignItems: 'center',
+        backgroundColor: this.props.backgroundColor,
       }]}>
         <Text style={[styles.tileText, {
           width: this.props.size,
@@ -31,6 +32,35 @@ class Tile extends Component {
 const tileBorderWidth = 1;
 const tileMargin = 1;
 
+const tileColors = ['#FFABAB',
+                    '#FFDAAB',
+                    '#FFFDD8',
+                    '#DDFFAB',
+                    '#B8F2D0',
+                    '#ABE4FF',
+                    '#D9ABFF']
+
+// Removes one thing from the list at random.
+function randomDrop(list) {
+  let out = [];
+  let drop = Math.floor(Math.random() * list.length);
+  for (let i = 0; i < list.length; i++) {
+    if (drop != i) {
+      out.push(list[i]);
+    }
+  }
+  return out;
+}
+
+// Selects a subset of size number from the list.
+function randomSubset(list, number) {
+  let answer = list;
+  while (answer.length > number) {
+    answer = randomDrop(answer);
+  }
+  return answer;
+}                    
+
 class Shuffley extends Component {
   render() {
     let words = ['JUPITER', 'MARS', 'MOON', 'EARTH', 'SATURN',
@@ -43,8 +73,14 @@ class Shuffley extends Component {
       tileBorderWidth + tileMargin);
     let parts = [];
     let key = 0;
-    for (let letter of word) {
-      parts.push(<Tile letter={letter} key={key} size={size}/>);
+    let colors = randomSubset(tileColors, word.length);
+    for (let i = 0; i < word.length; ++i) {
+      let letter = word[i];
+      parts.push(<Tile
+                 letter={letter}
+                 key={key}
+                 backgroundColor={colors[i]}
+                 size={size}/>);
       key++;
     }
     return (
@@ -70,14 +106,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   tileText: {
-    backgroundColor: '#FFFF00',
     textAlign: 'center',
   },
   tile: {
     margin: tileMargin,
     borderWidth: tileBorderWidth,
     borderColor: '#000000',
-    backgroundColor: '#FF0000',
   }
 });
 
