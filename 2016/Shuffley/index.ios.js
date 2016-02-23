@@ -1,7 +1,9 @@
 'use strict';
 import React, {
+  Animated,
   AppRegistry,
   Component,
+  PanResponder,
   StyleSheet,
   Text,
   View
@@ -9,17 +11,35 @@ import React, {
 
 import Dimensions from 'Dimensions';
 
+function bigDimension() {
+  let width = Dimensions.get('window').width;
+  let height = Dimensions.get('window').height;
+  return width < height ? height : width;
+}
+
+function smallDimension() {
+  let width = Dimensions.get('window').width;
+  let height = Dimensions.get('window').height;
+  return width > height ? height : width;
+}
+
+const TILE_BORDER_WIDTH = 1;
+const TILE_MARGIN = 1;
+
 class Tile extends Component {
   render() {
     return (
       <View style={[styles.tile, {
         height: this.props.size,
+        width: this.props.size,
+        top: (smallDimension() - this.props.size) / 2,
+        left: bigDimension() * (this.props.index / this.props.numLetters),
         flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: this.props.backgroundColor,
       }]}>
         <Text style={[styles.tileText, {
-          width: this.props.size,
+          width: this.props.size - 2 * TILE_BORDER_WIDTH,
           fontSize: this.props.size / 2,
         }]}>
           {this.props.letter}
@@ -28,9 +48,6 @@ class Tile extends Component {
     );
   }
 }
-
-const tileBorderWidth = 1;
-const tileMargin = 1;
 
 const tileColors = ['#FFABAB',
                     '#FFDAAB',
@@ -66,11 +83,9 @@ class Shuffley extends Component {
     let words = ['JUPITER', 'MARS', 'MOON', 'EARTH', 'SATURN',
                  'MERCURY', 'VENUS', 'NEPTUNE'];
     let word = words[Math.floor(Math.random() * words.length)];
-    let width = Dimensions.get('window').width;
-    let height = Dimensions.get('window').height;
-    let bigger = width < height ? height : width;
-    let size = Math.floor(bigger / word.length) - 2 * (
-      tileBorderWidth + tileMargin);
+
+    let size = Math.floor(bigDimension() / word.length) - 2 * (
+      TILE_BORDER_WIDTH + TILE_MARGIN);
     let parts = [];
     let key = 0;
     let colors = randomSubset(tileColors, word.length);
@@ -80,16 +95,14 @@ class Shuffley extends Component {
                  letter={letter}
                  key={key}
                  backgroundColor={colors[i]}
+                 index={i}
+                 numLetters={word.length}
                  size={size}/>);
       key++;
     }
     return (
       <View style={styles.container}>
-        <View style={{alignSelf: 'flex-start'}} />
-          <View style={styles.rack}>
-            {parts}
-          </View>
-        <View style={{alignSelf: 'flex-end'}} />
+        {parts}
       </View>
     );
   }
@@ -97,20 +110,15 @@ class Shuffley extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'center',
-    justifyContent: 'center',
     flex: 1,
-  },
-  rack: {
-    justifyContent: 'space-around',
-    flexDirection: 'row',
   },
   tileText: {
     textAlign: 'center',
   },
   tile: {
-    margin: tileMargin,
-    borderWidth: tileBorderWidth,
+    position: 'absolute',
+    margin: TILE_MARGIN,
+    borderWidth: TILE_BORDER_WIDTH,
     borderColor: '#000000',
   }
 });
