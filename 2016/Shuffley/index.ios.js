@@ -79,6 +79,25 @@ function randomSubset(list, number) {
 }                    
 
 class Shuffley extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      pan: new Animated.ValueXY(),
+    };
+
+    this.panResponder = PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onPanResponderMove: Animated.event([null, {
+        dx: this.state.pan.x,
+        dy: this.state.pan.y,
+      }]),
+      onPanResponderRelease: (e, gesture) => {
+        console.log('onPanResponderRelease');
+      },
+    });
+  }
+
   render() {
     let words = ['JUPITER', 'MARS', 'MOON', 'EARTH', 'SATURN',
                  'MERCURY', 'VENUS', 'NEPTUNE'];
@@ -91,13 +110,18 @@ class Shuffley extends Component {
     let colors = randomSubset(tileColors, word.length);
     for (let i = 0; i < word.length; ++i) {
       let letter = word[i];
-      parts.push(<Tile
-                 letter={letter}
-                 key={key}
-                 backgroundColor={colors[i]}
-                 index={i}
-                 numLetters={word.length}
-                 size={size}/>);
+      parts.push(
+        <Animated.View
+          key={key}
+          {...this.panResponder.panHandlers}
+          style={this.state.pan.getLayout()}>
+          <Tile letter={letter}
+                backgroundColor={colors[i]}
+                index={i}
+                numLetters={word.length}
+                size={size}/>
+        </Animated.View>
+      );
       key++;
     }
     return (
@@ -106,6 +130,7 @@ class Shuffley extends Component {
       </View>
     );
   }
+
 }
 
 const styles = StyleSheet.create({
