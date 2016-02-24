@@ -27,24 +27,47 @@ const TILE_BORDER_WIDTH = 1;
 const TILE_MARGIN = 1;
 
 class Tile extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      pan: new Animated.ValueXY(),
+    };
+
+    this.panResponder = PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onPanResponderMove: Animated.event([null, {
+        dx: this.state.pan.x,
+        dy: this.state.pan.y,
+      }]),
+      onPanResponderRelease: (e, gesture) => {
+        console.log('onPanResponderRelease');
+      },
+    });
+  }
+
   render() {
     return (
-      <View style={[styles.tile, {
-        height: this.props.size,
-        width: this.props.size,
-        top: (smallDimension() - this.props.size) / 2,
-        left: bigDimension() * (this.props.index / this.props.numLetters),
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: this.props.backgroundColor,
-      }]}>
-        <Text style={[styles.tileText, {
-          width: this.props.size - 2 * TILE_BORDER_WIDTH,
-          fontSize: this.props.size / 2,
+      <Animated.View
+          {...this.panResponder.panHandlers}
+          style={this.state.pan.getLayout()}>
+        <View style={[styles.tile, {
+          height: this.props.size,
+          width: this.props.size,
+          top: (smallDimension() - this.props.size) / 2,
+          left: bigDimension() * (this.props.index / this.props.numLetters),
+          flexDirection: 'row',
+          alignItems: 'center',
+          backgroundColor: this.props.backgroundColor,
         }]}>
-          {this.props.letter}
-        </Text>
-      </View>
+          <Text style={[styles.tileText, {
+            width: this.props.size - 2 * TILE_BORDER_WIDTH,
+            fontSize: this.props.size / 2,
+          }]}>
+            {this.props.letter}
+          </Text>
+        </View>
+      </Animated.View>
     );
   }
 }
@@ -79,25 +102,6 @@ function randomSubset(list, number) {
 }                    
 
 class Shuffley extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      pan: new Animated.ValueXY(),
-    };
-
-    this.panResponder = PanResponder.create({
-      onStartShouldSetPanResponder: () => true,
-      onPanResponderMove: Animated.event([null, {
-        dx: this.state.pan.x,
-        dy: this.state.pan.y,
-      }]),
-      onPanResponderRelease: (e, gesture) => {
-        console.log('onPanResponderRelease');
-      },
-    });
-  }
-
   render() {
     let words = ['JUPITER', 'MARS', 'MOON', 'EARTH', 'SATURN',
                  'MERCURY', 'VENUS', 'NEPTUNE'];
@@ -111,16 +115,12 @@ class Shuffley extends Component {
     for (let i = 0; i < word.length; ++i) {
       let letter = word[i];
       parts.push(
-        <Animated.View
-          key={key}
-          {...this.panResponder.panHandlers}
-          style={this.state.pan.getLayout()}>
           <Tile letter={letter}
+                key={key}
                 backgroundColor={colors[i]}
                 index={i}
                 numLetters={word.length}
                 size={size}/>
-        </Animated.View>
       );
       key++;
     }
