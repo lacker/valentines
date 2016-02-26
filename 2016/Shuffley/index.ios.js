@@ -35,7 +35,10 @@ class Tile extends Component {
     };
 
     this.panResponder = PanResponder.create({
-      onStartShouldSetPanResponder: () => true,
+      onStartShouldSetPanResponder: () => {
+        this.props.activate();
+        return true;
+      },
       onPanResponderMove: Animated.event([null, {
         dx: this.state.pan.x,
         dy: this.state.pan.y,
@@ -102,27 +105,47 @@ function randomSubset(list, number) {
 }                    
 
 class Shuffley extends Component {
-  render() {
+  constructor(props) {
+    super(props);
+
     let words = ['JUPITER', 'MARS', 'MOON', 'EARTH', 'SATURN',
                  'MERCURY', 'VENUS', 'NEPTUNE'];
     let word = words[Math.floor(Math.random() * words.length)];
 
-    let size = Math.floor(bigDimension() / word.length) - 2 * (
+    let colors = randomSubset(tileColors, word.length);
+
+    let tiles = [];
+    for (let i = 0; i < word.length; ++i) {
+      tiles.push({letter: word[i], color: colors[i], index: i});
+    }
+
+    this.state = {word, tiles, activeIndex: 0};
+  }
+
+  activate(index) {
+    this.setState({activeIndex: index});
+  }
+
+  render() {
+    let size = Math.floor(bigDimension() / this.state.word.length) - 2 * (
       TILE_BORDER_WIDTH + TILE_MARGIN);
     let parts = [];
     let key = 0;
-    let colors = randomSubset(tileColors, word.length);
-    for (let i = 0; i < word.length; ++i) {
-      let letter = word[i];
-      parts.push(
-          <Tile letter={letter}
-                key={key}
-                backgroundColor={colors[i]}
-                index={i}
-                numLetters={word.length}
+    for (let tile of this.state.tiles) {
+      let component = (
+          <Tile letter={tile.letter}
+                key={tile.index}
+                backgroundColor={tile.color}
+                index={tile.index}
+                numLetters={this.state.word.length}
+                activate={() => {this.activate(tile.index)}}
                 size={size}/>
       );
-      key++;
+      if (tile.index == this.state.activeIndex) {
+        parts.push(component);
+      } else {
+        parts.unshift(component);
+      }
     }
     return (
       <View style={styles.container}>
