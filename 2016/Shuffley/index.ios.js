@@ -78,7 +78,7 @@ class Tile extends Component {
   }
 }
 
-const tileColors = ['#FFABAB',
+const TILE_COLORS = ['#FFABAB',
                     '#FFDAAB',
                     '#FFFDD8',
                     '#DDFFAB',
@@ -116,7 +116,7 @@ class Shuffley extends Component {
       'MERCURY', 'VENUS', 'NEPTUNE', 'URANUS', 'SUN'];
     let word = words[Math.floor(Math.random() * words.length)];
 
-    let colors = randomSubset(tileColors, word.length);
+    let colors = randomSubset(TILE_COLORS, word.length);
 
     let tiles = [];
     for (let i = 0; i < word.length; ++i) {

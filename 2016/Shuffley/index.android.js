@@ -16,7 +16,7 @@ class Shuffley extends Component {
     return (
       <View style={styles.container}>
         <Text style={styles.welcome}>
-          Welcome to React Native!
+          TODO: maybe make this work in Android?
         </Text>
         <Text style={styles.instructions}>
           To get started, edit index.android.js
