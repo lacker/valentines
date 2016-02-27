@@ -105,14 +105,15 @@ function randomSubset(list, number) {
     answer = randomDrop(answer);
   }
   return answer;
-}                    
+}
 
 class Shuffley extends Component {
   constructor(props) {
     super(props);
 
-    let words = ['JUPITER', 'MARS', 'MOON', 'EARTH', 'SATURN',
-                 'MERCURY', 'VENUS', 'NEPTUNE'];
+    let words = [
+      'JUPITER', 'MARS', 'MOON', 'EARTH', 'SATURN',
+      'MERCURY', 'VENUS', 'NEPTUNE', 'URANUS', 'SUN'];
     let word = words[Math.floor(Math.random() * words.length)];
 
     let colors = randomSubset(tileColors, word.length);
