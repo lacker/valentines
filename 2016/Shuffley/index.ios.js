@@ -55,21 +55,21 @@ class Tile extends Component {
   render() {
     return (
       <Animated.View
-          {...this.panResponder.panHandlers}
-          style={this.state.pan.getLayout()}>
+        {...this.panResponder.panHandlers}
+        style={this.state.pan.getLayout()}>
         <View style={[styles.tile, {
-          height: this.props.size,
-          width: this.props.size,
-          top: (smallDimension() - this.props.size) / 2,
-          left: bigDimension() * (this.props.index / this.props.numLetters),
-          flexDirection: 'row',
-          alignItems: 'center',
-          backgroundColor: this.props.backgroundColor,
-        }]}>
-          <Text style={[styles.tileText, {
-            width: this.props.size - 2 * TILE_BORDER_WIDTH,
-            fontSize: this.props.size / 2,
+            height: this.props.size,
+            width: this.props.size,
+            top: (smallDimension() - this.props.size) / 2,
+            left: bigDimension() * (this.props.index / this.props.numLetters),
+            flexDirection: 'row',
+            alignItems: 'center',
+            backgroundColor: this.props.backgroundColor,
           }]}>
+          <Text style={[styles.tileText, {
+              width: this.props.size - 2 * TILE_BORDER_WIDTH,
+              fontSize: this.props.size / 2,
+            }]}>
             {this.props.letter}
           </Text>
         </View>
@@ -79,12 +79,12 @@ class Tile extends Component {
 }
 
 const TILE_COLORS = ['#FFABAB',
-                    '#FFDAAB',
-                    '#FFFDD8',
-                    '#DDFFAB',
-                    '#B8F2D0',
-                    '#ABE4FF',
-                    '#D9ABFF']
+                     '#FFDAAB',
+                     '#FFFDD8',
+                     '#DDFFAB',
+                     '#B8F2D0',
+                     '#ABE4FF',
+                     '#D9ABFF']
 
 // Removes one thing from the list at random.
 function randomDrop(list) {
@@ -114,65 +114,65 @@ class Shuffley extends Component {
     let words = [
       'JUPITER', 'MARS', 'MOON', 'EARTH', 'SATURN',
       'MERCURY', 'VENUS', 'NEPTUNE', 'URANUS', 'SUN'];
-    let word = words[Math.floor(Math.random() * words.length)];
+      let word = as[Math.floor(Math.random() * words.length)];
 
-    let colors = randomSubset(TILE_COLORS, word.length);
+      let colors = randomSubset(TILE_COLORS, word.length);
 
-    let tiles = [];
-    for (let i = 0; i < word.length; ++i) {
-      tiles.push({letter: word[i], color: colors[i], index: i});
-    }
-
-    this.state = {word, tiles, activeIndex: 0};
-  }
-
-  activate(index) {
-    this.setState({activeIndex: index});
-  }
-
-  render() {
-    let size = Math.floor(bigDimension() / this.state.word.length) - 2 * (
-      TILE_BORDER_WIDTH + TILE_MARGIN);
-    let parts = [];
-    let key = 0;
-    for (let tile of this.state.tiles) {
-      let component = (
-          <Tile letter={tile.letter}
-                key={tile.index}
-                backgroundColor={tile.color}
-                index={tile.index}
-                numLetters={this.state.word.length}
-                activate={() => {this.activate(tile.index)}}
-                size={size}/>
-      );
-      if (tile.index == this.state.activeIndex) {
-        parts.push(component);
-      } else {
-        parts.unshift(component);
+      let tiles = [];
+      for (let i = 0; i < word.length; ++i) {
+        tiles.push({letter: word[i], color: colors[i], index: i});
       }
+
+      this.state = {word, tiles, activeIndex: 0};
     }
-    return (
-      <View style={styles.container}>
-        {parts}
-      </View>
-    );
-  }
 
-}
+    activate(index) {
+      this.setState({activeIndex: index});
+    }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  tileText: {
-    textAlign: 'center',
-  },
-  tile: {
-    position: 'absolute',
-    margin: TILE_MARGIN,
-    borderWidth: TILE_BORDER_WIDTH,
-    borderColor: '#000000',
-  }
-});
+    render() {
+      let size = Math.floor(bigDimension() / this.state.word.length) - 2 * (
+        TILE_BORDER_WIDTH + TILE_MARGIN);
+        let parts = [];
+        let key = 0;
+        for (let tile of this.state.tiles) {
+          let component = (
+            <Tile letter={tile.letter}
+              key={tile.index}
+              backgroundColor={tile.color}
+              index={tile.index}
+              numLetters={this.state.word.length}
+              activate={() => {this.activate(tile.index)}}
+              size={size}/>
+          );
+          if (tile.index == this.state.activeIndex) {
+            parts.push(component);
+          } else {
+            parts.unshift(component);
+          }
+        }
+        return (
+          <View style={styles.container}>
+            {parts}
+          </View>
+        );
+      }
 
-AppRegistry.registerComponent('Shuffley', () => Shuffley);
+    }
+  
+    const styles = StyleSheet.create({
+      container: {
+        flex: 1,
+      },
+      tileText: {
+        textAlign: 'center',
+      },
+      tile: {
+        position: 'absolute',
+        margin: TILE_MARGIN,
+        borderWidth: TILE_BORDER_WIDTH,
+        borderColor: '#000000',
+      }
+    });
+
+    AppRegistry.registerComponent('Shuffley', () => Shuffley);
