@@ -44,7 +44,10 @@ class Tile extends Component {
         dy: this.state.pan.y,
       }]),
       onPanResponderRelease: (e, gesture) => {
-        console.log('onPanResponderRelease');
+        Animated.spring(
+          this.state.pan,
+          {toValue:{x:0, y:0}}
+        ).start();
       },
     });
   }
