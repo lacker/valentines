@@ -34,15 +34,19 @@ class Tile extends Component {
       pan: new Animated.ValueXY(),
     };
 
+    let animate = Animated.event([null, {
+      dx: this.state.pan.x,
+      dy: this.state.pan.y,
+    }]);
+
     this.panResponder = PanResponder.create({
       onStartShouldSetPanResponder: () => {
         this.props.activate();
         return true;
       },
-      onPanResponderMove: Animated.event([null, {
-        dx: this.state.pan.x,
-        dy: this.state.pan.y,
-      }]),
+      onPanResponderMove: (e, gesture) => {
+        animate(e, gesture);
+      },
       onPanResponderRelease: (e, gesture) => {
         Animated.spring(
           this.state.pan,
@@ -140,7 +144,7 @@ class Shuffley extends Component {
 
     let tiles = [];
     for (let i = 0; i < word.length; ++i) {
-      tiles.push({letter: word[i], color: colors[i], index: i});
+      tiles.push({letter: word[i], color: colors[i]});
     }
 
     let location = randomShuffle(range(word.length));
@@ -152,22 +156,42 @@ class Shuffley extends Component {
     this.setState({activeIndex: index});
   }
 
+  // Shifts the active tile by a delta. 1 = right, -1 = left;
+  shift(delta) {
+    let newActiveIndex = this.state.activeIndex + delta;
+    if (newActiveIndex > 0 || newActiveIndex >= this.state.word.length) {
+      // This isn't a valid shift
+      return;
+    }
+    let newLocation = this.state.location.map((i) => {
+      if (i == activeIndex) {
+        return newActiveIndex;
+      }
+      if (i == newActiveIndex) {
+        return activeIndex;
+      }
+      return i;
+    });
+    this.setState({activeIndex: newActiveIndex, location: newLocation})
+  }
+
   render() {
     let size = Math.floor(bigDimension() / this.state.word.length) - 2 * (
       TILE_BORDER_WIDTH + TILE_MARGIN);
     let parts = [];
-    let key = 0;
-    for (let tile of this.state.tiles) {
+    for (let i = 0; i < this.state.tiles.length; i++) {
+      let tile = this.state.tiles[i];
       let component = (
         <Tile letter={tile.letter}
-          key={tile.index}
+          key={i}
           backgroundColor={tile.color}
-          location={this.state.location[tile.index]}
+          location={this.state.location[i]}
           numLetters={this.state.word.length}
-          activate={() => {this.activate(tile.index)}}
+          activate={() => {this.activate(i)}}
+          shift={(delta) => {this.shift(delta)}}
           size={size}/>
       );
-      if (tile.index == this.state.activeIndex) {
+      if (i == this.state.activeIndex) {
         parts.push(component);
       } else {
         parts.unshift(component);
