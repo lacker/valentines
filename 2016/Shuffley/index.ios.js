@@ -61,7 +61,8 @@ class Tile extends Component {
             height: this.props.size,
             width: this.props.size,
             top: (smallDimension() - this.props.size) / 2,
-            left: bigDimension() * (this.props.index / this.props.numLetters),
+            left: bigDimension() * (this.props.location /
+              this.props.numLetters),
             flexDirection: 'row',
             alignItems: 'center',
             backgroundColor: this.props.backgroundColor,
@@ -86,6 +87,14 @@ const TILE_COLORS = ['#FFABAB',
                      '#ABE4FF',
                      '#D9ABFF']
 
+function range(n) {
+  let answer = [];
+  for (let i = 0; i < n; i++) {
+    answer.push(i);
+  }
+  return answer;
+}
+
 // Removes one thing from the list at random.
 function randomDrop(list) {
   let out = [];
@@ -107,6 +116,17 @@ function randomSubset(list, number) {
   return answer;
 }
 
+function randomShuffle(inputList) {
+  let list = Array.from(inputList);
+  for (let i = list.length - 1; i > 0; i--) {
+    let j = Math.floor(Math.random() * (i + 1));
+    let tmp = list[i];
+    list[i] = list[j];
+    list[j] = tmp;
+  }
+  return list;
+}
+
 class Shuffley extends Component {
   constructor(props) {
     super(props);
@@ -114,7 +134,7 @@ class Shuffley extends Component {
     let words = [
       'JUPITER', 'MARS', 'MOON', 'EARTH', 'SATURN',
       'MERCURY', 'VENUS', 'NEPTUNE', 'URANUS', 'SUN'];
-    let word = as[Math.floor(Math.random() * words.length)];
+    let word = words[Math.floor(Math.random() * words.length)];
 
     let colors = randomSubset(TILE_COLORS, word.length);
 
@@ -123,7 +143,9 @@ class Shuffley extends Component {
       tiles.push({letter: word[i], color: colors[i], index: i});
     }
 
-    this.state = {word, tiles, activeIndex: 0};
+    let location = randomShuffle(range(word.length));
+
+    this.state = {word, tiles, activeIndex: 0, location};
   }
 
   activate(index) {
@@ -140,7 +162,7 @@ class Shuffley extends Component {
         <Tile letter={tile.letter}
           key={tile.index}
           backgroundColor={tile.color}
-          index={tile.index}
+          location={this.state.location[tile.index]}
           numLetters={this.state.word.length}
           activate={() => {this.activate(tile.index)}}
           size={size}/>
