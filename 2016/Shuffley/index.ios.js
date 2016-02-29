@@ -41,8 +41,9 @@ class Tile extends Component {
 
     this.panResponder = PanResponder.create({
       onStartShouldSetPanResponder: (e) => {
-        console.log(e);
         this.props.activate();
+        this.startX = e.nativeEvent.pageX;
+        console.log('startX', this.startX);
         return true;
       },
       onPanResponderMove: (e, gesture) => {
