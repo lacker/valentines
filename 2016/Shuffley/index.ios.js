@@ -40,15 +40,18 @@ class Tile extends Component {
     }]);
 
     this.panResponder = PanResponder.create({
-      onStartShouldSetPanResponder: () => {
+      onStartShouldSetPanResponder: (e) => {
+        console.log(e);
         this.props.activate();
         return true;
       },
       onPanResponderMove: (e, gesture) => {
         animate(e, gesture);
-        if (gesture.dx < -0.5 * this.props.size) {
+        let normalDX = gesture.dx / this.props.size;
+        if (normalDX < 0.5) {
           this.props.shift(-1);
-        } else if (gesture.dx > 0.5 * this.props.size) {
+        } else if (normalDX > 0.5) {
+          console.log('right-shifting one');
           this.props.shift(1);
         }
       },
@@ -61,6 +64,17 @@ class Tile extends Component {
     });
   }
 
+  // The normal top, not including animation
+  top() {
+    return (smallDimension() - this.props.size) / 2;
+  }
+
+  // The normal left, not including animation
+  left() {
+    return bigDimension() * (this.props.location /
+              this.props.numLetters);
+  }
+
   render() {
     return (
       <Animated.View
@@ -69,9 +83,8 @@ class Tile extends Component {
         <View style={[styles.tile, {
             height: this.props.size,
             width: this.props.size,
-            top: (smallDimension() - this.props.size) / 2,
-            left: bigDimension() * (this.props.location /
-              this.props.numLetters),
+            top: this.top(),
+            left: this.left(),
             flexDirection: 'row',
             alignItems: 'center',
             backgroundColor: this.props.backgroundColor,
@@ -182,7 +195,7 @@ class Shuffley extends Component {
       return loc;
     });
 
-    this.setState(newState);
+    this.setState({location: newLocation});
   }
 
   render() {
