@@ -46,6 +46,12 @@ class Tile extends Component {
       },
       onPanResponderMove: (e, gesture) => {
         animate(e, gesture);
+        if (gesture.dx < -0.5 * this.props.size) {
+          this.props.shift(-1);
+        } else if (gesture.dx > 0.5 * this.props.size) {
+          this.props.shift(1);
+        }
+        console.log(gesture.dx, gesture.dy, this.props.size);
       },
       onPanResponderRelease: (e, gesture) => {
         Animated.spring(
@@ -158,17 +164,19 @@ class Shuffley extends Component {
 
   // Shifts the active tile by a delta. 1 = right, -1 = left;
   shift(delta) {
+    console.log('shifting active tile by ' + delta)
+
     let newActiveIndex = this.state.activeIndex + delta;
     if (newActiveIndex > 0 || newActiveIndex >= this.state.word.length) {
       // This isn't a valid shift
       return;
     }
     let newLocation = this.state.location.map((i) => {
-      if (i == activeIndex) {
+      if (i == this.state.activeIndex) {
         return newActiveIndex;
       }
       if (i == newActiveIndex) {
-        return activeIndex;
+        return this.state.activeIndex;
       }
       return i;
     });
