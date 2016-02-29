@@ -51,7 +51,6 @@ class Tile extends Component {
         } else if (gesture.dx > 0.5 * this.props.size) {
           this.props.shift(1);
         }
-        console.log(gesture.dx, gesture.dy, this.props.size);
       },
       onPanResponderRelease: (e, gesture) => {
         Animated.spring(
@@ -170,7 +169,6 @@ class Shuffley extends Component {
     if (newActiveLocation < 0 ||
         newActiveLocation >= this.state.word.length) {
       // This isn't a valid shift
-      console.log('nAL ' + newActiveLocation + ' not a valid shift!');
       return;
     }
 
@@ -184,8 +182,6 @@ class Shuffley extends Component {
       return loc;
     });
 
-    let newState = {location: newLocation};
-    console.log('setState', newState);
     this.setState(newState);
   }
 
