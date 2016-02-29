@@ -164,23 +164,29 @@ class Shuffley extends Component {
 
   // Shifts the active tile by a delta. 1 = right, -1 = left;
   shift(delta) {
-    console.log('shifting active tile by ' + delta)
+    let activeLocation = this.state.location[this.state.activeIndex];
+    let newActiveLocation = activeLocation + delta;
 
-    let newActiveIndex = this.state.activeIndex + delta;
-    if (newActiveIndex > 0 || newActiveIndex >= this.state.word.length) {
+    if (newActiveLocation < 0 ||
+        newActiveLocation >= this.state.word.length) {
       // This isn't a valid shift
+      console.log('nAL ' + newActiveLocation + ' not a valid shift!');
       return;
     }
-    let newLocation = this.state.location.map((i) => {
-      if (i == this.state.activeIndex) {
-        return newActiveIndex;
+
+    let newLocation = this.state.location.map((loc) => {
+      if (loc == activeLocation) {
+        return newActiveLocation;
       }
-      if (i == newActiveIndex) {
-        return this.state.activeIndex;
+      if (loc == newActiveLocation) {
+        return activeLocation;
       }
-      return i;
+      return loc;
     });
-    this.setState({activeIndex: newActiveIndex, location: newLocation})
+
+    let newState = {location: newLocation};
+    console.log('setState', newState);
+    this.setState(newState);
   }
 
   render() {
