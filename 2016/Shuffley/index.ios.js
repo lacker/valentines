@@ -32,53 +32,36 @@ class Tile extends Component {
 
     this.state = {
       pan: new Animated.ValueXY(),
+      tempTop: null,
+      tempLeft: null,
     };
-    this.state.pan.setValue({x: this.left(), y: this.top()});
 
-    let animate = Animated.event([null, {
-      dx: this.state.pan.x,
-      dy: this.state.pan.y,
-    }]);
+    let panStart = {};
 
     this.panResponder = PanResponder.create({
       onStartShouldSetPanResponder: (e) => {
         this.props.activate();
-        this.startX = e.nativeEvent.pageX;
-        console.log('startX', this.startX);
+        panStart.top = this.props.top;
+        panStart.left = this.props.left;
         return true;
       },
       onPanResponderMove: (e, gesture) => {
         this.state.pan.setValue({
-          x: gesture.dx + this.left(),
-          y: gesture.dy + this.top(),
+          x: gesture.dx + panStart.left,
+          y: gesture.dy + panStart.top,
         });
-
-        let normalDX = gesture.dx / this.props.size;
-        if (normalDX < -0.5) {
-          this.props.shift(-1);
-        } else if (normalDX > 0.5) {
-          console.log('right-shifting one');
-          this.props.shift(1);
-        }
       },
       onPanResponderRelease: (e, gesture) => {
         Animated.spring(
           this.state.pan,
-          {toValue:{x: this.left(), y: this.top()}}
+          {toValue: {x: this.props.left, y: this.props.top}}
         ).start();
       },
     });
   }
 
-  // The normal top, not including animation
-  top() {
-    return (smallDimension() - this.props.size) / 2;
-  }
-
-  // The normal left, not including animation
-  left() {
-    return bigDimension() * (this.props.location /
-              this.props.numLetters);
+  componentWillMount() {
+    this.state.pan.setValue({x: this.props.left, y: this.props.top});
   }
 
   render() {
@@ -208,12 +191,15 @@ class Shuffley extends Component {
     let parts = [];
     for (let i = 0; i < this.state.tiles.length; i++) {
       let tile = this.state.tiles[i];
+      let top = (smallDimension() - size) / 2;
+      let left = bigDimension() * (this.state.location[i] /
+        this.state.word.length);
       let component = (
         <Tile letter={tile.letter}
           key={i}
           backgroundColor={tile.color}
-          location={this.state.location[i]}
-          numLetters={this.state.word.length}
+          top={top}
+          left={left}
           activate={() => {this.activate(i)}}
           shift={(delta) => {this.shift(delta)}}
           size={size}/>
