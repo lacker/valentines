@@ -50,6 +50,14 @@ class Tile extends Component {
           x: gesture.dx + panStart.left,
           y: gesture.dy + panStart.top,
         });
+
+        let accountedDelta = this.props.left - panStart.left;
+        let newDelta = gesture.dx - accountedDelta;
+        if (newDelta < -0.5 * this.props.size) {
+          this.props.shift(-1);
+        } else if (newDelta > 0.5 * this.props.size) {
+          this.props.shift(1);
+        }
       },
       onPanResponderRelease: (e, gesture) => {
         Animated.spring(
@@ -65,6 +73,14 @@ class Tile extends Component {
   }
 
   render() {
+    // This works, but there's a warning that this is happening in render.
+    if (this.state.pan.x != this.props.left) {
+      Animated.spring(
+        this.state.pan,
+        {toValue: {x: this.props.left, y: this.props.top}}
+      ).start();
+    }
+    
     return (
       <Animated.View
         {...this.panResponder.panHandlers}
