@@ -33,6 +33,7 @@ class Tile extends Component {
     this.state = {
       pan: new Animated.ValueXY(),
     };
+    this.state.pan.setValue({x: this.left(), y: this.top()});
 
     let animate = Animated.event([null, {
       dx: this.state.pan.x,
@@ -47,9 +48,13 @@ class Tile extends Component {
         return true;
       },
       onPanResponderMove: (e, gesture) => {
-        animate(e, gesture);
+        this.state.pan.setValue({
+          x: gesture.dx + this.left(),
+          y: gesture.dy + this.top(),
+        });
+
         let normalDX = gesture.dx / this.props.size;
-        if (normalDX < 0.5) {
+        if (normalDX < -0.5) {
           this.props.shift(-1);
         } else if (normalDX > 0.5) {
           console.log('right-shifting one');
@@ -59,7 +64,7 @@ class Tile extends Component {
       onPanResponderRelease: (e, gesture) => {
         Animated.spring(
           this.state.pan,
-          {toValue:{x:0, y:0}}
+          {toValue:{x: this.left(), y: this.top()}}
         ).start();
       },
     });
@@ -84,8 +89,6 @@ class Tile extends Component {
         <View style={[styles.tile, {
             height: this.props.size,
             width: this.props.size,
-            top: this.top(),
-            left: this.left(),
             flexDirection: 'row',
             alignItems: 'center',
             backgroundColor: this.props.backgroundColor,
