@@ -154,15 +154,25 @@ function randomShuffle(inputList) {
   return list;
 }
 
+const WORDS = [
+  'JUPITER', 'MARS', 'MOON', 'EARTH', 'SATURN',
+  'MERCURY', 'VENUS', 'NEPTUNE', 'URANUS', 'SUN'];
+
+function randomWord() {
+  return WORDS[Math.floor(Math.random() * WORDS.length)]
+}
+
+// A "controller-view" since most game controller logic is in here.
 class Shuffley extends Component {
   constructor(props) {
     super(props);
+  }
 
-    let words = [
-      'JUPITER', 'MARS', 'MOON', 'EARTH', 'SATURN',
-      'MERCURY', 'VENUS', 'NEPTUNE', 'URANUS', 'SUN'];
-    let word = words[Math.floor(Math.random() * words.length)];
+  componentWillMount() {
+    this.setWord(randomWord());
+  }
 
+  setWord(word) {
     let colors = randomSubset(TILE_COLORS, word.length);
 
     let tiles = [];
@@ -172,7 +182,7 @@ class Shuffley extends Component {
 
     let location = randomShuffle(range(word.length));
 
-    this.state = {word, tiles, activeIndex: 0, location};
+    this.setState({word, tiles, activeIndex: 0, location});
   }
 
   activate(index) {
@@ -204,6 +214,10 @@ class Shuffley extends Component {
   }
 
   render() {
+    if (!this.state.word) {
+      return null;
+    }
+
     let size = Math.floor(bigDimension() / this.state.word.length) - 2 * (
       TILE_BORDER_WIDTH + TILE_MARGIN);
     let parts = [];
