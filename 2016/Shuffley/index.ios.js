@@ -72,15 +72,17 @@ class Tile extends Component {
     this.state.pan.setValue({x: this.props.left, y: this.props.top});
   }
 
-  render() {
-    // This works, but there's a warning that this is happening in render.
-    if (this.state.pan.x != this.props.left) {
+  componentWillReceiveProps(newProps) {
+    if (this.props.left != newProps.left &&
+        this.state.pan.x != newProps.left) {
       Animated.spring(
         this.state.pan,
-        {toValue: {x: this.props.left, y: this.props.top}}
+        {toValue: {x: newProps.left, y: newProps.top}}
       ).start();
     }
-    
+  }
+
+  render() {
     return (
       <Animated.View
         {...this.panResponder.panHandlers}
