@@ -185,6 +185,16 @@ class Shuffley extends Component {
     this.setState({word, tiles, activeIndex: 0, location});
   }
 
+  // Drops the current word, if possible
+  killWord() {
+    if (WORDS.length < 2) {
+      return;
+    }
+    let index = WORDS.indexOf(this.state.word);
+    WORDS.splice(index, 1);
+    this.setWord(randomWord());
+  }
+
   activate(index) {
     this.setState({activeIndex: index});
   }
