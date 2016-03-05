@@ -195,6 +195,12 @@ class Shuffley extends Component {
     this.setWord(randomWord());
   }
 
+  // Adds a new word to the list and also makes it active.
+  newWord(word) {
+    WORDS.push(word);
+    this.setWord(WORDS.length - 1);
+  }
+
   activate(index) {
     this.setState({activeIndex: index});
   }
