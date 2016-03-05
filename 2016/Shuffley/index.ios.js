@@ -196,9 +196,13 @@ class Shuffley extends Component {
   }
 
   // Adds a new word to the list and also makes it active.
+  // If this word is already in this list, just make it active.
   newWord(word) {
-    WORDS.push(word);
-    this.setWord(WORDS.length - 1);
+    let index = WORDS.indexOf(word);
+    if (index < 0) {
+      WORDS.push(word);
+    }
+    this.setWord(word);
   }
 
   activate(index) {
