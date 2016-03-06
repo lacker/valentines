@@ -151,6 +151,7 @@ function randomShuffle(inputList) {
     list[i] = list[j];
     list[j] = tmp;
   }
+
   return list;
 }
 
@@ -170,6 +171,13 @@ class Shuffley extends Component {
 
   componentWillMount() {
     this.setWord(randomWord());
+
+    this.panResponder = PanResponder.create({
+      onStartShouldSetPanResponder: (e) => {
+        console.log('starting pan');
+        return true;
+      },
+    });
   }
 
   setWord(word) {
@@ -263,7 +271,8 @@ class Shuffley extends Component {
       }
     }
     return (
-      <View style={styles.container}>
+      <View style={styles.container}
+        {...this.panResponder.panHandlers}>
         {parts}
       </View>
     );
