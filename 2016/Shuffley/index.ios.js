@@ -213,6 +213,18 @@ class Shuffley extends Component {
     this.setWord(word);
   }
 
+  // Picks another word from our list.
+  nextWord() {
+    let word;
+    while (true) {
+      word = WORDS[Math.floor(Math.random() * WORDS.length)];
+      if (word != this.state.word || WORDS.length < 2) {
+        break;
+      }
+    }
+    this.setWord(word);
+  }
+
   activate(index) {
     this.setState({activeIndex: index});
   }
