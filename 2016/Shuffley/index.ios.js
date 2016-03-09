@@ -179,6 +179,11 @@ class Shuffley extends Component {
       },
       onPanResponderRelease: (e, gesture) => {
         console.log('pan dy = ' + gesture.dy);
+
+        if (gesture.dy > 100) {
+          // Swipe down means next word
+          this.killWord();
+        }
       },
     });
   }
