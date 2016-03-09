@@ -177,6 +177,9 @@ class Shuffley extends Component {
         console.log('starting pan');
         return true;
       },
+      onPanResponderRelease: (e, gesture) => {
+        console.log('pan dy = ' + gesture.dy);
+      },
     });
   }
 
