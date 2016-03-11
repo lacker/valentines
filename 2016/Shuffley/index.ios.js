@@ -213,7 +213,7 @@ class Shuffley extends Component {
 
   // Adds a new word to the list and also makes it active.
   // If this word is already in this list, just make it active.
-  newWord(word) {
+  addWord(word) {
     let index = WORDS.indexOf(word);
     if (index < 0) {
       WORDS.push(word);
@@ -259,6 +259,16 @@ class Shuffley extends Component {
     });
 
     this.setState({location: newLocation});
+
+    // Check to see if the word is correct
+    let display = '';
+    for (let index of this.state.location) {
+      display += this.state.word[index];
+    }
+    if (display == this.state.word) {
+      // We solved the puzzle
+      this.nextWord();
+    }
   }
 
   render() {
