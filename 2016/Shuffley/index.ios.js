@@ -11,6 +11,19 @@ import React, {
 
 import Dimensions from 'Dimensions';
 
+// The main Redux reducer for this application
+// TODO: implement SET_WORD, SHIFT, replace all setState with this
+function reduce(state = {}, action) {
+  if (action.type == 'ACTIVATE') {
+    return {
+      ...state,
+      activeIndex: action.index
+    }
+  }
+
+  return state;
+}
+
 function bigDimension() {
   let width = Dimensions.get('window').width;
   let height = Dimensions.get('window').height;
