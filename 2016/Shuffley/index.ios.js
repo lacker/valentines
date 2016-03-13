@@ -12,13 +12,30 @@ import React, {
 import Dimensions from 'Dimensions';
 
 // The main Redux reducer for this application
-// TODO: implement SET_WORD, SHIFT, replace all setState with this
+// TODO: implement SHIFT, replace all setState with this
 function reduce(state = {}, action) {
   if (action.type == 'ACTIVATE') {
     return {
       ...state,
       activeIndex: action.index
+    };
+  }
+
+  if (action.type == 'SET_WORD') {
+    let colors = randomSubset(TILE_COLORS, word.length);
+    let tiles = [];
+    for (let i = 0; i < word.length; ++i) {
+      tiles.push({letter: word[i], color: colors[i]});
     }
+    let location = randomShuffle(range(word.length));
+    this.setState({word, tiles, activeIndex: 0, location});
+    return {
+      ...state,
+      word,
+      tiles,
+      activeIndex: 0,
+      location
+    };
   }
 
   return state;
