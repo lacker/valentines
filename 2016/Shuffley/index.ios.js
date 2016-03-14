@@ -12,7 +12,7 @@ import React, {
 import Dimensions from 'Dimensions';
 
 // The main Redux reducer for this application
-// TODO: implement SHIFT, replace all setState with this
+// TODO: replace all setState with this, test
 function reduce(state = {}, action) {
   if (action.type == 'ACTIVATE') {
     return {
@@ -35,6 +35,13 @@ function reduce(state = {}, action) {
       tiles,
       activeIndex: 0,
       location
+    };
+  }
+
+  if (action.type == 'SET_LOCATION') {
+    return {
+      ...state,
+      location: action.location
     };
   }
 
