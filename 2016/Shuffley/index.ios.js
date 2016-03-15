@@ -8,8 +8,10 @@ import React, {
   Text,
   View
 } from 'react-native';
-
 import Dimensions from 'Dimensions';
+import { createStore } from 'redux';
+import { Provider, connect } from 'react-redux';
+
 
 // The main Redux reducer for this application
 // TODO: replace all setState with this, test
@@ -47,6 +49,8 @@ function reduce(state = {}, action) {
 
   return state;
 }
+
+let store = createStore(reduce);
 
 function bigDimension() {
   let width = Dimensions.get('window').width;
@@ -142,6 +146,8 @@ class Tile extends Component {
     );
   }
 }
+Tile = connect(state => state)(Tile);
+
 
 const TILE_COLORS = ['#FFABAB',
                      '#FFDAAB',
@@ -344,8 +350,8 @@ class Shuffley extends Component {
       </View>
     );
   }
-
 }
+Shuffley = connect(state => state)(Shuffley);
 
 const styles = StyleSheet.create({
   container: {
@@ -362,4 +368,5 @@ const styles = StyleSheet.create({
   }
 });
 
+// TODO: figure out how to wrap a Provider here
 AppRegistry.registerComponent('Shuffley', () => Shuffley);
