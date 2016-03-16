@@ -14,7 +14,6 @@ import { Provider, connect } from 'react-redux';
 
 
 // The main Redux reducer for this application
-// TODO: replace all setState with this, test
 function reduce(state = {}, action) {
   if (action.type == 'ACTIVATE') {
     return {
@@ -24,6 +23,7 @@ function reduce(state = {}, action) {
   }
 
   if (action.type == 'SET_WORD') {
+    let word = action.word;
     let colors = randomSubset(TILE_COLORS, word.length);
     let tiles = [];
     for (let i = 0; i < word.length; ++i) {
@@ -232,16 +232,10 @@ class Game extends Component {
   }
 
   setWord(word) {
-    let colors = randomSubset(TILE_COLORS, word.length);
-
-    let tiles = [];
-    for (let i = 0; i < word.length; ++i) {
-      tiles.push({letter: word[i], color: colors[i]});
-    }
-
-    let location = randomShuffle(range(word.length));
-
-    this.setState({word, tiles, activeIndex: 0, location});
+    store.dispatch({
+      type: 'SET_WORD',
+      word
+    })
   }
 
   // Drops the current word, if possible
