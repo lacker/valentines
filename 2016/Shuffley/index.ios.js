@@ -207,7 +207,7 @@ function randomWord() {
 }
 
 // A "controller-view" since most game controller logic is in here.
-class Shuffley extends Component {
+class Game extends Component {
   constructor(props) {
     super(props);
   }
@@ -351,7 +351,17 @@ class Shuffley extends Component {
     );
   }
 }
-Shuffley = connect(state => state)(Shuffley);
+Game = connect(state => state)(Game);
+
+class Shuffley extends Component {
+  render() {
+    return (
+      <Provider store={store}>
+        <Game />
+      </Provider>
+    );
+  }
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -368,5 +378,4 @@ const styles = StyleSheet.create({
   }
 });
 
-// TODO: figure out how to wrap a Provider here
 AppRegistry.registerComponent('Shuffley', () => Shuffley);
