@@ -30,7 +30,6 @@ function reduce(state = {}, action) {
       tiles.push({letter: word[i], color: colors[i]});
     }
     let location = randomShuffle(range(word.length));
-    this.setState({word, tiles, activeIndex: 0, location});
     return {
       ...state,
       word,
@@ -270,8 +269,11 @@ class Game extends Component {
     this.setWord(word);
   }
 
-  activate(index) {
-    this.setState({activeIndex: index});
+  activate(activeIndex) {
+    store.dispatch({
+      type: 'ACTIVATE',
+      activeIndex
+    });
   }
 
   // Shifts the active tile by a delta. 1 = right, -1 = left;
@@ -295,7 +297,10 @@ class Game extends Component {
       return loc;
     });
 
-    this.setState({location: newLocation});
+    store.dispatch({
+      type: 'SET_LOCATION',
+      location: newLocation,
+    });
 
     // Check to see if the word is correct
     let display = '';
