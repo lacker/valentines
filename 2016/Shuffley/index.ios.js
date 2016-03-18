@@ -231,7 +231,7 @@ class Game extends Component {
   }
 
   setWord(word) {
-    store.dispatch({
+    this.props.dispatch({
       type: 'SET_WORD',
       word
     })
@@ -270,7 +270,7 @@ class Game extends Component {
   }
 
   activate(activeIndex) {
-    store.dispatch({
+    this.props.dispatch({
       type: 'ACTIVATE',
       activeIndex
     });
@@ -297,7 +297,7 @@ class Game extends Component {
       return loc;
     });
 
-    store.dispatch({
+    this.props.dispatch({
       type: 'SET_LOCATION',
       location: newLocation,
     });
