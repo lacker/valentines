@@ -225,9 +225,16 @@ class Game extends Component {
         if (gesture.dy > 100) {
           // Swipe down means next word
           this.killWord();
+        } else if (gesture.dy < -100) {
+          // Swipe up means open keyboard
+          this.openKeyboard();
         }
       },
     });
+  }
+
+  openKeyboard() {
+    console.log('TODO: open keyboard here');
   }
 
   setWord(word) {
