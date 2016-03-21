@@ -46,6 +46,10 @@ function reduce(state = {}, action) {
     };
   }
 
+  if (action.type == 'OPEN_KEYBOARD') {
+    // TODO: implement
+  }
+
   return state;
 }
 
@@ -234,7 +238,9 @@ class Game extends Component {
   }
 
   openKeyboard() {
-    console.log('TODO: open keyboard here');
+    this.props.dispatch({
+      type: 'OPEN_KEYBOARD',
+    });
   }
 
   setWord(word) {
