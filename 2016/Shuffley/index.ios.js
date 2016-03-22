@@ -35,7 +35,8 @@ function reduce(state = {}, action) {
       word,
       tiles,
       activeIndex: 0,
-      location
+      location,
+      keyboard: false,
     };
   }
 
@@ -47,7 +48,10 @@ function reduce(state = {}, action) {
   }
 
   if (action.type == 'OPEN_KEYBOARD') {
-    // TODO: implement
+    return {
+      ...state,
+      keyboard: true,
+    }
   }
 
   return state;
@@ -209,6 +213,10 @@ function randomWord() {
   return WORDS[Math.floor(Math.random() * WORDS.length)]
 }
 
+class KeyboardView extends Component {
+
+}
+
 // A "controller-view" since most game controller logic is in here.
 class Game extends Component {
   constructor(props) {
@@ -255,7 +263,7 @@ class Game extends Component {
     if (WORDS.length < 2) {
       return;
     }
-    let index = WORDS.indexOf(this.state.word);
+    let index = WORDS.indexOf(this.props.word);
     WORDS.splice(index, 1);
     this.setWord(randomWord());
   }
@@ -275,7 +283,7 @@ class Game extends Component {
     let word;
     while (true) {
       word = WORDS[Math.floor(Math.random() * WORDS.length)];
-      if (word != this.state.word || WORDS.length < 2) {
+      if (word != this.props.word || WORDS.length < 2) {
         break;
       }
     }
@@ -291,16 +299,16 @@ class Game extends Component {
 
   // Shifts the active tile by a delta. 1 = right, -1 = left;
   shift(delta) {
-    let activeLocation = this.state.location[this.state.activeIndex];
+    let activeLocation = this.props.location[this.props.activeIndex];
     let newActiveLocation = activeLocation + delta;
 
     if (newActiveLocation < 0 ||
-        newActiveLocation >= this.state.word.length) {
+        newActiveLocation >= this.props.word.length) {
       // This isn't a valid shift
       return;
     }
 
-    let newLocation = this.state.location.map((loc) => {
+    let newLocation = this.props.location.map((loc) => {
       if (loc == activeLocation) {
         return newActiveLocation;
       }
@@ -317,28 +325,32 @@ class Game extends Component {
 
     // Check to see if the word is correct
     let display = '';
-    for (let index of this.state.location) {
-      display += this.state.word[index];
+    for (let index of this.props.location) {
+      display += this.props.word[index];
     }
-    if (display == this.state.word) {
+    if (display == this.props.word) {
       // We solved the puzzle
       this.nextWord();
     }
   }
 
   render() {
-    if (!this.state.word) {
+    if (this.props.keyboard) {
+      return <TextInput />;
+    }
+
+    if (!this.props.word) {
       return null;
     }
 
-    let size = Math.floor(bigDimension() / this.state.word.length) - 2 * (
+    let size = Math.floor(bigDimension() / this.props.word.length) - 2 * (
       TILE_BORDER_WIDTH + TILE_MARGIN);
     let parts = [];
-    for (let i = 0; i < this.state.tiles.length; i++) {
-      let tile = this.state.tiles[i];
+    for (let i = 0; i < this.props.tiles.length; i++) {
+      let tile = this.props.tiles[i];
       let top = (smallDimension() - size) / 2;
-      let left = bigDimension() * (this.state.location[i] /
-        this.state.word.length);
+      let left = bigDimension() * (this.props.location[i] /
+        this.props.word.length);
       let component = (
         <Tile letter={tile.letter}
           key={i}
@@ -349,7 +361,7 @@ class Game extends Component {
           shift={(delta) => {this.shift(delta)}}
           size={size}/>
       );
-      if (i == this.state.activeIndex) {
+      if (i == this.props.activeIndex) {
         parts.push(component);
       } else {
         parts.unshift(component);
