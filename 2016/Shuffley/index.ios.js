@@ -113,6 +113,7 @@ class Tile extends Component {
           this.state.pan,
           {toValue: {x: this.props.left, y: this.props.top}}
         ).start();
+        this.props.checkForSuccess();
       },
     });
   }
@@ -281,8 +282,29 @@ class Game extends Component {
     this.setWord(word);
   }
 
+  // Tries ticks up one each time and at some threshold we actually continue
+  checkForSuccess(tries) {
+    if (!tries) {
+      tries = 0;
+    }
+    console.log('checkForSuccess', tries);
+    // Check to see if the word is correct
+    let display = '';
+    for (let index of this.props.location) {
+      display += this.props.word[index];
+    }
+    if (display == this.props.word) {
+      if (tries >= 20) {
+        this.nextWord();
+      } else {
+        setTimeout(() => this.checkForSuccess(tries + 1), 50);
+      }
+    }
+  }
+
   // Picks another word from our list.
   nextWord() {
+    console.log('nextWord');
     let word;
     while (true) {
       word = WORDS[Math.floor(Math.random() * WORDS.length)];
@@ -325,16 +347,6 @@ class Game extends Component {
       type: 'SET_LOCATION',
       location: newLocation,
     });
-
-    // Check to see if the word is correct
-    let display = '';
-    for (let index of this.props.location) {
-      display += this.props.word[index];
-    }
-    if (display == this.props.word) {
-      // We solved the puzzle
-      this.nextWord();
-    }
   }
 
   render() {
@@ -361,6 +373,7 @@ class Game extends Component {
           top={top}
           left={left}
           activate={() => {this.activate(i)}}
+          checkForSuccess={() => {this.checkForSuccess()}}
           shift={(delta) => {this.shift(delta)}}
           size={size}/>
       );
