@@ -214,7 +214,9 @@ function randomWord() {
 }
 
 class KeyboardView extends Component {
-
+  render() {
+    return <TextInput/>;
+  }
 }
 
 // A "controller-view" since most game controller logic is in here.
@@ -336,7 +338,7 @@ class Game extends Component {
 
   render() {
     if (this.props.keyboard) {
-      return <TextInput />;
+      return <KeyboardView />;
     }
 
     if (!this.props.word) {
