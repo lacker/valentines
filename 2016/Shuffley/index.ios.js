@@ -18,7 +18,7 @@ function reduce(state = {}, action) {
   if (action.type == 'ACTIVATE') {
     return {
       ...state,
-      activeIndex: action.index
+      activeIndex: action.activeIndex
     };
   }
 
@@ -88,6 +88,7 @@ class Tile extends Component {
 
     this.panResponder = PanResponder.create({
       onStartShouldSetPanResponder: (e) => {
+        console.log('starting Tile pan');
         this.props.activate();
         panStart.top = this.props.top;
         panStart.left = this.props.left;
@@ -230,7 +231,7 @@ class Game extends Component {
 
     this.panResponder = PanResponder.create({
       onStartShouldSetPanResponder: (e) => {
-        console.log('starting pan');
+        console.log('starting Game pan');
         return true;
       },
       onPanResponderRelease: (e, gesture) => {
