@@ -6,6 +6,7 @@ import React, {
   PanResponder,
   StyleSheet,
   Text,
+  TextInput,
   View
 } from 'react-native';
 import Dimensions from 'Dimensions';
@@ -48,6 +49,7 @@ function reduce(state = {}, action) {
   }
 
   if (action.type == 'OPEN_KEYBOARD') {
+    console.log('opening keyboard');
     return {
       ...state,
       keyboard: true,
@@ -216,8 +218,23 @@ function randomWord() {
 }
 
 class KeyboardView extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {text: ''};
+  }
+
   render() {
-    return <TextInput/>;
+    // TODO: all caps
+    // TODO: show the keyboard
+    // TODO: show a message
+    // TODO: add the word on "enter"
+
+    return (
+      <TextInput
+        style={{height: 40, borderColor: 'gray', borderWidth: 1}} onChangeText={(text) => this.setState({text})}
+        value={this.state.text} />
+    );
   }
 }
 
