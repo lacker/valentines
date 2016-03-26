@@ -7,6 +7,18 @@ import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import Game from './Game';
 
+// TODO: start off rotated
+// TODO: don't do the null-shuffle
+// TODO: some indication of success
+
+const WORDS = [
+  'JUPITER', 'MARS', 'MOON', 'EARTH', 'SATURN',
+  'MERCURY', 'VENUS', 'NEPTUNE', 'URANUS', 'SUN'];
+
+function randomWord() {
+  return WORDS[Math.floor(Math.random() * WORDS.length)]
+}
+
 // Removes one thing from the list at random.
 function randomDrop(list) {
   let out = [];
@@ -56,8 +68,29 @@ function range(n) {
   return answer;
 }
 
+// Reducer-helper. Returns a new state.
+function setWord(state, word) {
+  let colors = randomSubset(TILE_COLORS, word.length);
+  let tiles = [];
+  for (let i = 0; i < word.length; ++i) {
+    tiles.push({letter: word[i], color: colors[i]});
+  }
+  let location = randomShuffle(range(word.length));
+  return {
+    ...state,
+    word,
+    tiles,
+    activeIndex: 0,
+    location,
+    keyboard: false,
+    smiley: false
+  };
+}
+
 // The main Redux reducer for this application
 function reduce(state = {}, action) {
+  console.log(state, action);
+
   if (action.type == 'ACTIVATE') {
     return {
       ...state,
@@ -66,21 +99,41 @@ function reduce(state = {}, action) {
   }
 
   if (action.type == 'SET_WORD') {
-    let word = action.word;
-    let colors = randomSubset(TILE_COLORS, word.length);
-    let tiles = [];
-    for (let i = 0; i < word.length; ++i) {
-      tiles.push({letter: word[i], color: colors[i]});
+    return setWord(state, action.word);
+  }
+
+  // Drops the current word, if possible
+  if (action.type == 'KILL_WORD') {
+    if (WORDS.length < 2) {
+      return state;
     }
-    let location = randomShuffle(range(word.length));
-    return {
-      ...state,
-      word,
-      tiles,
-      activeIndex: 0,
-      location,
-      keyboard: false,
-    };
+    let index = WORDS.indexOf(this.props.word);
+    WORDS.splice(index, 1);
+    return setWord(state, randomWord());
+  }
+
+  if (action.type == 'ADD_WORD') {
+    let word = action.word;
+    if (word.length < 3) {
+      return state;
+    }
+    let index = WORDS.indexOf(word);
+    if (index < 0) {
+      WORDS.push(word);
+    }
+    return setWord(state, word);
+  }
+
+  if (action.type == 'NEXT_WORD') {
+    // Picks another word from our list.
+    let word;
+    while (true) {
+      word = WORDS[Math.floor(Math.random() * WORDS.length)];
+      if (word != state.word || WORDS.length < 2) {
+        break;
+      }
+    }
+    return setWord(state, word);
   }
 
   if (action.type == 'SET_LOCATION') {
@@ -102,6 +155,9 @@ function reduce(state = {}, action) {
 }
 
 let store = createStore(reduce);
+store.dispatch({
+  type: 'NEXT_WORD'
+});
 
 class Shuffley extends Component {
   render() {

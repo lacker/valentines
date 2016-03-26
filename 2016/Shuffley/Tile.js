@@ -14,7 +14,6 @@ import {
 } from './constants';
 
 
-
 class Tile extends Component {
   constructor(props) {
     super(props);

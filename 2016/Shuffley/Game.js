@@ -26,14 +26,6 @@ function smallDimension() {
   return width > height ? height : width;
 }
 
-const WORDS = [
-  'JUPITER', 'MARS', 'MOON', 'EARTH', 'SATURN',
-  'MERCURY', 'VENUS', 'NEPTUNE', 'URANUS', 'SUN'];
-
-function randomWord() {
-  return WORDS[Math.floor(Math.random() * WORDS.length)]
-}
-
 // A "controller-view" since most game controller logic is in here.
 class Game extends Component {
   constructor(props) {
@@ -41,8 +33,6 @@ class Game extends Component {
   }
 
   componentWillMount() {
-    this.setWord(randomWord());
-
     this.panResponder = PanResponder.create({
       onStartShouldSetPanResponder: (e) => {
         console.log('starting Game pan');
@@ -53,7 +43,9 @@ class Game extends Component {
 
         if (gesture.dy > 100) {
           // Swipe down means next word
-          this.killWord();
+          this.props.dispatch({
+            type: 'KILL_WORD',
+          });
         } else if (gesture.dy < -100) {
           // Swipe up means open keyboard
           this.openKeyboard();
@@ -66,33 +58,6 @@ class Game extends Component {
     this.props.dispatch({
       type: 'OPEN_KEYBOARD',
     });
-  }
-
-  setWord(word) {
-    this.props.dispatch({
-      type: 'SET_WORD',
-      word
-    })
-  }
-
-  // Drops the current word, if possible
-  killWord() {
-    if (WORDS.length < 2) {
-      return;
-    }
-    let index = WORDS.indexOf(this.props.word);
-    WORDS.splice(index, 1);
-    this.setWord(randomWord());
-  }
-
-  // Adds a new word to the list and also makes it active.
-  // If this word is already in this list, just make it active.
-  addWord(word) {
-    let index = WORDS.indexOf(word);
-    if (index < 0) {
-      WORDS.push(word);
-    }
-    this.setWord(word);
   }
 
   // Tries ticks up one each time and at some threshold we actually continue
@@ -108,24 +73,13 @@ class Game extends Component {
     }
     if (display == this.props.word) {
       if (tries >= 20) {
-        this.nextWord();
+        this.props.dispatch({
+          type: 'NEXT_WORD'
+        });
       } else {
         setTimeout(() => this.checkForSuccess(tries + 1), 50);
       }
     }
-  }
-
-  // Picks another word from our list.
-  nextWord() {
-    console.log('nextWord');
-    let word;
-    while (true) {
-      word = WORDS[Math.floor(Math.random() * WORDS.length)];
-      if (word != this.props.word || WORDS.length < 2) {
-        break;
-      }
-    }
-    this.setWord(word);
   }
 
   activate(activeIndex) {
@@ -181,7 +135,7 @@ class Game extends Component {
         this.props.word.length);
       let component = (
         <Tile letter={tile.letter}
-          key={i}
+          key={this.props.word + i}
           backgroundColor={tile.color}
           top={top}
           left={left}

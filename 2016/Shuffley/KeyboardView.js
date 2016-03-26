@@ -5,19 +5,23 @@ import React, {
   TextInput,
   View
 } from 'react-native';
+import { connect } from 'react-redux';
 
-export default class KeyboardView extends Component {
+class KeyboardView extends Component {
   constructor(props) {
     super(props);
 
     this.state = {text: ''};
   }
 
-  render() {
-    // TODO: all caps
-    // TODO: show a message
-    // TODO: add the word on "enter"
+  onEndEditing() {
+    this.props.dispatch({
+      type: 'ADD_WORD',
+      word: this.state.text,
+    });
+  }
 
+  render() {
     return (
       <View style={{
           flex: 1,
@@ -27,13 +31,15 @@ export default class KeyboardView extends Component {
         <View style={{flex: 1, justifyContent: 'center'}}>
           <TextInput
             style={{
-              height: 40,
-              borderColor: 'gray',
-              borderWidth: 1,
-              width: 200
+              height: 60,
+              width: 200,
+              textAlign: 'center',
+              fontSize: 48,
             }}
+            autoCapitalize={'characters'}
             autoFocus
             onChangeText={(text) => this.setState({text})}
+            onEndEditing={() => this.onEndEditing()}
             value={this.state.text} />
         </View>
         <View style={{
@@ -41,7 +47,7 @@ export default class KeyboardView extends Component {
             justifyContent: 'center',
           }}>
           <Text
-            style={{textAlign: 'center'}}>
+            style={{textAlign: 'center', fontSize: 24}}>
             Enter a word that would be fun to unscramble!
           </Text>
         </View>
@@ -50,3 +56,4 @@ export default class KeyboardView extends Component {
     );
   }
 }
+export default connect(state => state)(KeyboardView);
