@@ -9,7 +9,6 @@ import Game from './Game';
 
 // TODO: start off rotated
 // TODO: don't do the null-shuffle
-// TODO: some indication of success
 
 const WORDS = [
   'JUPITER', 'MARS', 'MOON', 'EARTH', 'SATURN',
@@ -91,6 +90,20 @@ function setWord(state, word) {
 function reduce(state = {}, action) {
   console.log(state, action);
 
+  if (action.type == 'SMILE') {
+    return {
+      ...state,
+      smiley: true
+    }
+  }
+
+  if (action.type == 'UNSMILE') {
+    return {
+      ...state,
+      smiley: false
+    }
+  }
+
   if (action.type == 'ACTIVATE') {
     return {
       ...state,
@@ -107,7 +120,7 @@ function reduce(state = {}, action) {
     if (WORDS.length < 2) {
       return state;
     }
-    let index = WORDS.indexOf(this.props.word);
+    let index = WORDS.indexOf(state.word);
     WORDS.splice(index, 1);
     return setWord(state, randomWord());
   }

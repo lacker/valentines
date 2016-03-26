@@ -3,6 +3,7 @@ import React, {
   Component,
   PanResponder,
   StyleSheet,
+  Text,
   View
 } from 'react-native';
 import { connect } from 'react-redux';
@@ -77,8 +78,15 @@ class Game extends Component {
           type: 'NEXT_WORD'
         });
       } else {
+        this.props.dispatch({
+          type: 'SMILE'
+        });
         setTimeout(() => this.checkForSuccess(tries + 1), 50);
       }
+    } else {
+      this.props.dispatch({
+        type: 'UNSMILE'
+      });
     }
   }
 
@@ -149,6 +157,16 @@ class Game extends Component {
       } else {
         parts.unshift(component);
       }
+    }
+    if (this.props.smiley) {
+      parts.push(<Text
+        style={{
+          fontSize: Math.floor((smallDimension() - size) / 64) * 16,
+          textAlign: 'center',
+        }}
+        key={'smiley'}>
+        😄
+      </Text>)
     }
     return (
       <View style={styles.container}
