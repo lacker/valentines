@@ -7,7 +7,8 @@ import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import Game from './Game';
 
-// TODO: start off rotated
+// TODO: start off rotated. Blocked on a bug at:
+// https://github.com/facebook/react-native/issues/6647
 
 const WORDS = [
   'JUPITER', 'MARS', 'MOON', 'EARTH', 'SATURN',
