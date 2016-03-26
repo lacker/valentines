@@ -1,10 +1,10 @@
 'use strict';
-import {
+import React, {
   Component,
   TextInput
 } from 'react-native';
 
-class KeyboardView extends Component {
+export default class KeyboardView extends Component {
   constructor(props) {
     super(props);
 

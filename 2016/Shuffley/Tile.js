@@ -1,17 +1,21 @@
 'use strict';
-import {
+import React, {
   Animated,
   Component,
   PanResponder,
   StyleSheet,
   Text,
   View
-} from 'react-native'
+} from 'react-native';
+import { connect } from 'react-redux';
+import {
+  TILE_BORDER_WIDTH,
+  TILE_MARGIN
+} from './constants';
 
-const TILE_BORDER_WIDTH = 1;
-const TILE_MARGIN = 1;
 
-export default class Tile extends Component {
+
+class Tile extends Component {
   constructor(props) {
     super(props);
 
@@ -92,7 +96,7 @@ export default class Tile extends Component {
     );
   }
 }
-Tile = connect(state => state)(Tile);
+export default connect(state => state)(Tile);
 
 const styles = StyleSheet.create({
   tileText: {

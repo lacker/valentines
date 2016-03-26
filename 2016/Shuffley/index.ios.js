@@ -1,10 +1,11 @@
 'use strict';
-import {
-  AppRegistry
+import React, {
+  AppRegistry,
+  Component
 } from 'react-native';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
-import 'Game';
+import Game from './Game';
 
 // Removes one thing from the list at random.
 function randomDrop(list) {
@@ -37,6 +38,22 @@ function randomShuffle(inputList) {
   }
 
   return list;
+}
+
+const TILE_COLORS = ['#FFABAB',
+                     '#FFDAAB',
+                     '#FFFDD8',
+                     '#DDFFAB',
+                     '#B8F2D0',
+                     '#ABE4FF',
+                     '#D9ABFF'];
+
+function range(n) {
+  let answer = [];
+  for (let i = 0; i < n; i++) {
+    answer.push(i);
+  }
+  return answer;
 }
 
 // The main Redux reducer for this application

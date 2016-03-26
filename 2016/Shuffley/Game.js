@@ -1,13 +1,18 @@
 'use strict';
-import {
+import React, {
   Component,
   PanResponder,
-  StyleSheet
+  StyleSheet,
+  View
 } from 'react-native';
 import { connect } from 'react-redux';
 import Dimensions from 'Dimensions';
-import 'KeyboardView';
-import 'Tile';
+import KeyboardView from './KeyboardView';
+import Tile from './Tile';
+import {
+  TILE_BORDER_WIDTH,
+  TILE_MARGIN
+} from './constants';
 
 function bigDimension() {
   let width = Dimensions.get('window').width;
@@ -21,24 +26,6 @@ function smallDimension() {
   return width > height ? height : width;
 }
 
-const TILE_COLORS = ['#FFABAB',
-                     '#FFDAAB',
-                     '#FFFDD8',
-                     '#DDFFAB',
-                     '#B8F2D0',
-                     '#ABE4FF',
-                     '#D9ABFF']
-
-function range(n) {
-  let answer = [];
-  for (let i = 0; i < n; i++) {
-    answer.push(i);
-  }
-  return answer;
-}
-
-
-
 const WORDS = [
   'JUPITER', 'MARS', 'MOON', 'EARTH', 'SATURN',
   'MERCURY', 'VENUS', 'NEPTUNE', 'URANUS', 'SUN'];
@@ -48,7 +35,7 @@ function randomWord() {
 }
 
 // A "controller-view" since most game controller logic is in here.
-export default class Game extends Component {
+class Game extends Component {
   constructor(props) {
     super(props);
   }
@@ -217,7 +204,7 @@ export default class Game extends Component {
     );
   }
 }
-Game = connect(state => state)(Game);
+export default connect(state => state)(Game);
 
 const styles = StyleSheet.create({
   container: {
