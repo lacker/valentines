@@ -8,7 +8,6 @@ import { Provider } from 'react-redux';
 import Game from './Game';
 
 // TODO: start off rotated
-// TODO: don't do the null-shuffle
 
 const WORDS = [
   'JUPITER', 'MARS', 'MOON', 'EARTH', 'SATURN',
@@ -39,7 +38,11 @@ function randomSubset(list, number) {
   return answer;
 }
 
+// When it's long enough, never shuffles so that the output equals the input.
 function randomShuffle(inputList) {
+  if (inputList.length < 2) {
+    return inputList;
+  }
   let list = Array.from(inputList);
   for (let i = list.length - 1; i > 0; i--) {
     let j = Math.floor(Math.random() * (i + 1));
@@ -48,6 +51,10 @@ function randomShuffle(inputList) {
     list[j] = tmp;
   }
 
+  if (list.toString() == inputList.toString()) {
+    // Try again
+    return randomShuffle(inputList);
+  }
   return list;
 }
 
