@@ -1,5 +1,7 @@
 A repository of past Valentine's Day entertainment.
 
+2017 - HeartKen (mobile game)
+2016 - Shuffley (mobile game)
 2015 - The Great Escape (web game)
 2014 - Flappy Alex (mobile web game)
 2013 - Jigsaw Alex (web game)
@@ -13,7 +15,7 @@ A repository of past Valentine's Day entertainment.
 
 
 To deploy, just copy all files in this repository to a public directory
-on the web somewhere, and index.html will let you browse.
+on the web somewhere, and index.html should let you browse.
 
 For example, to deploy a particular year with scp to a
 html/valentines directory:
