@@ -1,5 +1,7 @@
 A repository of past Valentine's Day entertainment.
 
+2019 - Kid Rush - https://github.com/lacker/kidrush
+2018 - Untitled (movie)
 2017 - HeartKen (mobile game)
 2016 - Shuffley (mobile game)
 2015 - The Great Escape (web game)
@@ -13,6 +15,8 @@ A repository of past Valentine's Day entertainment.
 2007 - Jigsaw Anna (web game)
 2006 - The Pursuit Of Justice (movie)
 
+This repo got too large from including big honking files so I started
+splitting it out.
 
 To deploy, just copy all files in this repository to a public directory
 on the web somewhere, and index.html should let you browse.
